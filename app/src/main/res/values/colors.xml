@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorYellowTile">#e1d01a</color>
+    <color name="colorBrownTile">#8b5300</color>
+    <color name="colorBoardBorder">#000000</color>
+    <color name="colorBorderLetters">#ffffff</color>
+    <color name="colorAttackedTile">#FF0000</color>
+    <color name="colorMovingTile">#0000FF</color>
+    <color name="colorSelectedTile">#00FF00</color>
+    <color name="colorWhiteSide">#FFFFFF</color>
+    <color name="colorBlackSide">#000000</color>
+</resources>
