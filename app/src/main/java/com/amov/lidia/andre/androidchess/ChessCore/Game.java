@@ -163,4 +163,16 @@ public class Game extends Observable {
 
         GameBoard.AllPieces.remove(attackedPiece);
     }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public Player getWhitePlayer() {
+        return WhitePlayer;
+    }
+
+    public Player getBlackPlayer() {
+        return BlackPlayer;
+    }
 }

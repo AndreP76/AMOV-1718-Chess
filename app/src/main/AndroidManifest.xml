@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity" />
-        <activity android:name=".LoadActivity"></activity>
+        <activity android:name=".LoadActivity" />
+        <activity android:name=".HistoricoActivity" />
+        <activity android:name=".VerHistoricoJogoActivity"></activity>
     </application>
 
 </manifest>
