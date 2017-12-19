@@ -29,12 +29,16 @@ public class BoardView extends View {
     private Paint whiteSidePaint;
     private Paint blackSidePaint;
     private Paint redPaint;
+    private Paint textPaint;
+
     private int boardHeight;            //this is all in pixels
     private int boardWidth;             //this is all in pixels
     private int widthPerCol;            //this is all in pixels
     private int heightPerLine;          //this is all in pixels
     private int borderThicknessSides;   //this is all in pixels
     private int borderThicknessTops;    //this is all in pixels
+    private int textHorizontalOffset;    //this is all in pixels
+    private int textVerticalOffset;    //this is all in pixels
     private Paint greenPaint;
 
     public BoardView(Context context) {
@@ -70,6 +74,10 @@ public class BoardView extends View {
         blackSidePaint = new Paint(Paint.DITHER_FLAG);
         blackSidePaint.setColor(ContextCompat.getColor(context, R.color.colorBlackSide));
         blackSidePaint.setStyle(Paint.Style.FILL);
+
+        textPaint = new Paint(Paint.DITHER_FLAG);
+        textPaint.setColor(ContextCompat.getColor(context, R.color.colorBoardText));
+        textPaint.setStyle(Paint.Style.FILL);
     }
 
     // 0 1 2 3 4 5 6 7
@@ -86,7 +94,13 @@ public class BoardView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(0, 0, boardWidth, boardHeight, blackPaint);
+        canvas.drawRect(0, 0, boardWidth, boardHeight, textPaint);
+        for(int i = 0; i < 8;++i){
+            int textX = 0;
+            int textY = 0;
+            canvas.drawText('A'+i + "",textX,textY,textPaint);
+        }
+
         GamePiece gp = Chess.getCurrentSelectedPiece();
         ArrayList<Move> Movements = null;
         ArrayList<Attack> Attacks = null;
@@ -112,7 +126,9 @@ public class BoardView extends View {
                     p = DefaultResolvePaint(i,j);
                 }
 
-                canvas.drawRect(j * widthPerCol, i * heightPerLine, j * widthPerCol + widthPerCol, i * heightPerLine + heightPerLine, p);
+                int startX = j * widthPerCol + borderThicknessSides;
+                int startY = i * heightPerLine + borderThicknessTops;
+                canvas.drawRect(startX, startY, startX + widthPerCol, startY + heightPerLine, p);
             }
         }
 
@@ -120,7 +136,9 @@ public class BoardView extends View {
         ArrayList<GamePiece> AllPieces = G.getAllPieces();
         for(int i = 0; i < AllPieces.size();++i){
             GamePiece p = AllPieces.get(i);
-            canvas.drawText(p.getLetter(),p.getPositionInBoard().getCol() * widthPerCol,p.getPositionInBoard().getLine() * heightPerLine,p.getSide() == Game.WHITE_SIDE ? whiteSidePaint : blackSidePaint);
+            int startX = (p.getPositionInBoard().getCol()) * widthPerCol + borderThicknessSides + textHorizontalOffset;
+            int startY = (p.getPositionInBoard().getLine()+1) * heightPerLine + borderThicknessTops + textVerticalOffset;
+            canvas.drawText(p.getUnicodeLetter(),startX,startY,p.getSide() == Game.WHITE_SIDE ? whiteSidePaint : blackSidePaint);
         }
     }
 
@@ -140,13 +158,18 @@ public class BoardView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        this.boardWidth = w;
-        this.boardHeight = h;
+        this.boardWidth = this.boardHeight = Math.min(w,h);//força o campo a ser quadrado ao assumir o menor espaço possivel como o tamanho de cada lado do campo
 
-        widthPerCol = w / 8;
-        heightPerLine = h / 8;
-        borderThicknessSides = (int) (w * 0.05);
-        borderThicknessTops = (int) (h * 0.05);
+        borderThicknessSides = (int) (this.boardWidth * 0.05);
+        borderThicknessTops = (int) (this.boardHeight * 0.05);
+
+        widthPerCol = (this.boardWidth-(borderThicknessSides*2)) / 8;
+        heightPerLine = (this.boardHeight-(borderThicknessTops*2)) / 8;
+        whiteSidePaint.setTextSize(widthPerCol);
+        blackSidePaint.setTextSize(widthPerCol);
+        textPaint.setTextSize(Math.min(borderThicknessSides,borderThicknessTops));
+        textHorizontalOffset = (int) (this.widthPerCol * 0.15);
+        textVerticalOffset = (int) (this.heightPerLine * -0.15);
 
         super.onSizeChanged(w, h, oldw, oldh);
     }

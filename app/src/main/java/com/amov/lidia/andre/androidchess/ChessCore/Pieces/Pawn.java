@@ -29,13 +29,13 @@ public class Pawn extends GamePiece {
         if(this.getSide() == BLACK_SIDE){//Black side goes north and only north
             for(int i = pointInGame.getLine()-1; i > pointInGame.getLine()-dist;--i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
-                else ALM.add(new Move(this.getPositionInBoard(),new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
+                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
             }
         }
         if(this.getSide() == Game.WHITE_SIDE){//White side goes south and only north
             for(int i = pointInGame.getLine()+1; i < pointInGame.getLine()+dist;++i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
-                else ALM.add(new Move(this.getPositionInBoard(),new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
+                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
             }
         }
         return ALM;
@@ -95,6 +95,11 @@ public class Pawn extends GamePiece {
     @Override
     public String getLetter() {
         return "P";
+    }
+
+    @Override
+    public String getUnicodeLetter() {
+        return "\u265F";
     }
 
     @Override

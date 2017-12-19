@@ -6,6 +6,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
 
 import java.util.ArrayList;
 
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils.NextDir;
 
 public class Rook extends GamePiece {
@@ -81,6 +82,11 @@ public class Rook extends GamePiece {
     @Override
     public String getLetter() {
         return "R";
+    }
+
+    @Override
+    public String getUnicodeLetter() {
+        return "\u265C";
     }
 
     @Override

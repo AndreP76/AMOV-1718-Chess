@@ -12,4 +12,5 @@
     <color name="colorSelectedTile">#00FF00</color>
     <color name="colorWhiteSide">#FFFFFF</color>
     <color name="colorBlackSide">#000000</color>
+    <color name="colorBoardText">#FFFFFF</color>
 </resources>

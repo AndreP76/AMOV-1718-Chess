@@ -11,9 +11,11 @@ public class Move {
     String PieceName;
     String PieceSymbol;
     short Side;
+    GamePiece gp;
 
-    public Move(Point origin, Point destination, String pieceName, String pieceSymbol, short side) {
-        Origin = origin;
+    public Move(GamePiece gp, Point destination, String pieceName, String pieceSymbol, short side) {
+        Origin = gp.getPositionInBoard();
+        this.gp = gp;
         Destination = destination;
         PieceName = pieceName;
         PieceSymbol = pieceSymbol;
@@ -21,7 +23,7 @@ public class Move {
     }
 
     public Move(GamePiece p,Point destination){
-        this(p.getPositionInBoard(),destination,p.getName(),p.getLetter(),p.getSide());
+        this(p,destination,p.getName(),p.getLetter(),p.getSide());
     }
 
     public Point getDestination() {
@@ -53,5 +55,13 @@ public class Move {
             SideString = "White ";
         }
         return SideString + PieceName.toLowerCase() + " from " + Origin.toString() + " to " + Destination.toString();
+    }
+
+    public GamePiece getPiece() {
+        return gp;
+    }
+
+    public boolean isValidMove() {
+        return true;
     }
 }

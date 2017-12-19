@@ -13,12 +13,13 @@
         <!-- Aqui fica o fragmento do jogador local (1)-->
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
-        <!-- Aqui fica o fragmento do mapa-->
-    </LinearLayout>
+        android:layout_weight="4"
+        android:id="@+id/gameFragmentContainer">
+        <!--aqui fica a board -->
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

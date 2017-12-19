@@ -19,8 +19,12 @@ public class Game extends Observable {
     Board GameBoard;
     Short StartSide = WHITE_SIDE;
     private short CurrentPlayer;
+    private Player WhitePlayer;
+    private Player BlackPlayer;
 
-    Game() {
+    public Game(Player WhitePlayer, Player BlackPlayer) {
+        this.WhitePlayer = WhitePlayer == null ? new Player() : WhitePlayer;
+        this.BlackPlayer = BlackPlayer == null ? new Player() : BlackPlayer;
         CurrentPlayer = StartSide;
         GameBoard = new Board();
         GameBoard.AllPieces = new ArrayList<>();
@@ -75,6 +79,8 @@ public class Game extends Observable {
 
             GameBoard.AllPieces.addAll(SidesPieces[BLACK_SIDE]);
             GameBoard.AllPieces.addAll(SidesPieces[WHITE_SIDE]);
+            WhitePlayer.addPieces(SidesPieces[WHITE_SIDE]);
+            BlackPlayer.addPieces(SidesPieces[BLACK_SIDE]);
 
         } catch (AlreadyFilledException e) {
             e.printStackTrace();
@@ -130,5 +136,30 @@ public class Game extends Observable {
 
     public ArrayList<GamePiece> getAllPieces() {
         return GameBoard.AllPieces;
+    }
+
+    public boolean executeMove(Move m){
+        if(m.isValidMove()) {
+            m.getPiece().setPositionInBoard(m.getDestination());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean executeMove(Attack a){
+        if(a.isValidMove()){
+            ChessTile ct = GameBoard.getTile(a.getDestination());
+            a.getPiece().setPositionInBoard(a.getDestination());
+            destroyPiece(a.getAttackedPiece());
+            return true;
+        }
+        return false;
+    }
+
+    private void destroyPiece(GamePiece attackedPiece) {
+        if(attackedPiece.getSide() == BLACK_SIDE){SidesPieces[BLACK_SIDE].remove(attackedPiece);BlackPlayer.removePiece(attackedPiece);}
+        else if(attackedPiece.getSide() == WHITE_SIDE) {SidesPieces[WHITE_SIDE].remove(attackedPiece);WhitePlayer.removePiece(attackedPiece);}
+
+        GameBoard.AllPieces.remove(attackedPiece);
     }
 }

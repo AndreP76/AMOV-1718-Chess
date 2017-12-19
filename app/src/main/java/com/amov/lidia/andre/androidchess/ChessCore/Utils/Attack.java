@@ -10,9 +10,13 @@ public class Attack extends Move {
     String AttackedPieceName;
     String AttackedPieceSymbol;
     public Attack(GamePiece AttackerPiece, GamePiece AttackedPiece) {
-        super(AttackedPiece.getPositionInBoard(), AttackedPiece.getPositionInBoard(), AttackerPiece.getName(), AttackerPiece.getLetter(), AttackedPiece.getSide());
+        super(AttackedPiece, AttackedPiece.getPositionInBoard(), AttackerPiece.getName(), AttackerPiece.getLetter(), AttackedPiece.getSide());
         this.AttackedPiece = AttackerPiece;
         AttackedPieceName = AttackedPiece.getName();
         AttackedPieceSymbol = AttackedPiece.getLetter();
+    }
+
+    public GamePiece getAttackedPiece() {
+        return AttackedPiece;
     }
 }

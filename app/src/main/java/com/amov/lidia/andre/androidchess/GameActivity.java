@@ -1,6 +1,8 @@
 package com.amov.lidia.andre.androidchess;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,5 +15,10 @@ public class GameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        Fragment gf = GameFragment.newInstance();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.gameFragmentContainer,gf);
+        ft.commit();
     }
 }

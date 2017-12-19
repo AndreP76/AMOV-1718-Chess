@@ -6,6 +6,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
 
 import java.util.ArrayList;
 
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils.NextDir;
 
 public class Bishop extends GamePiece{
@@ -32,7 +33,7 @@ public class Bishop extends GamePiece{
             int Col = pointInBoard.getCol() + ColIncrement;
             while (Line >= 0 && Col >= 0) {
                 if (this.getGameBoard().getTile(new Point(Line, Col)) != null && this.getGameBoard().getTile(new Point(Line, Col)) != null) {//empty, valid tile
-                    ALM.add(new Move(pointInBoard, new Point(Line, Col), this.getName(), this.getLetter(), this.getSide()));
+                    ALM.add(new Move(this, new Point(Line, Col), this.getName(), this.getLetter(), this.getSide()));
                 } else break;
                 Line += LineIncrement;
                 Col += ColIncrement;
@@ -78,6 +79,11 @@ public class Bishop extends GamePiece{
     @Override
     public String getLetter() {
         return "B";
+    }
+
+    @Override
+    public String getUnicodeLetter() {
+        return "\u265D";
     }
 
     @Override

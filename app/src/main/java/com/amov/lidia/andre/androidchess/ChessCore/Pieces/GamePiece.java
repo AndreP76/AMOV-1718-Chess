@@ -33,6 +33,15 @@ public abstract class GamePiece {
     public boolean Move(Point newPos){ return this.setPositionInBoard(newPos); }
     public void Move(int newX, int newY){ this.setPositionInBoard(new Point(newX,newY)); }
     public abstract String getLetter();
+    public abstract String getUnicodeLetter();
+
+    // branca       pretas
+    // u/2654       u/265A  rei
+    // u/2655       u/265B  dama
+    // u/2656       u/265C  torre
+    // u/2657       u/265D  bispo
+    // u/2658       u/265E  cavalo
+    // u/2659       u/265F  peao
 
     /*SETTERS*/
     public boolean setPositionInBoard(Point positionInBoard) {

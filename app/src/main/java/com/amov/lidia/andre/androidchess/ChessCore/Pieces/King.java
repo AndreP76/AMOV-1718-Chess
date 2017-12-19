@@ -6,6 +6,8 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
 
 import java.util.ArrayList;
 
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
+
 public class King extends GamePiece {
     public King(Board B, Point Position, short Side) throws AlreadyFilledException {
         super(B, Position, Side);
@@ -52,6 +54,11 @@ public class King extends GamePiece {
     @Override
     public String getLetter() {
         return "K";
+    }
+
+    @Override
+    public String getUnicodeLetter() {
+        return "\u265A";
     }
 
     @Override
