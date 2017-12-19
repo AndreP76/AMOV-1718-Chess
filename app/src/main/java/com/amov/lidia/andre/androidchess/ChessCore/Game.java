@@ -1,6 +1,5 @@
 package com.amov.lidia.andre.androidchess.ChessCore;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
@@ -13,6 +12,7 @@ public class Game extends Observable {
     public static final short BLACK_SIDE = 1;
 
     public static final short STANDARD_PAWNS_COUNT = 8;
+    public GameMode gameMode;
 
     ArrayList<GamePiece>[] SidesPieces;
     ArrayList<GamePiece>[] CapturedPieces;
@@ -22,7 +22,8 @@ public class Game extends Observable {
     private Player WhitePlayer;
     private Player BlackPlayer;
 
-    public Game(Player WhitePlayer, Player BlackPlayer) {
+    public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm) {
+        this.gameMode = gm;
         this.WhitePlayer = WhitePlayer == null ? new Player() : WhitePlayer;
         this.BlackPlayer = BlackPlayer == null ? new Player() : BlackPlayer;
         CurrentPlayer = StartSide;

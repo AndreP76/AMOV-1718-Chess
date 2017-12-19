@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
 import com.amov.lidia.andre.androidchess.ChessCore.Player;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
 
 public class GameFragment extends Fragment {
     GameMode gameMode;
@@ -45,7 +46,7 @@ public class GameFragment extends Fragment {
                 gameMode = GameMode.SinglePlayer;
                 Player player1 = new Player("Human Player", false);
                 Player player2 = new Player();
-                Chess.setCurrentGame(new Game(player1, player2));
+                Chess.setCurrentGame(new Game(player1, player2,gameMode));
             }
         }
     }

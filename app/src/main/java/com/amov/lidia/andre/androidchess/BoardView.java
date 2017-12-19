@@ -40,6 +40,8 @@ public class BoardView extends View {
     private int textHorizontalOffset;    //this is all in pixels
     private int textVerticalOffset;    //this is all in pixels
     private Paint greenPaint;
+    private int borderVerticalTextOffset;
+    private int borderHorizontalTextOffset;
 
     public BoardView(Context context) {
         super(context);
@@ -81,24 +83,31 @@ public class BoardView extends View {
     }
 
     // 0 1 2 3 4 5 6 7
-
-    // wwbbwwbbwwbbwwbb 0
-    // bbwwbbwwbbwwbbww 1
-    // wwbbwwbbwwbbwwbb 2
-    // bbwwbbwwbbwwbbww 3
-    // wwbbwwbbwwbbwwbb 4
-    // bbwwbbwwbbwwbbww 5
-    // wwbbwwbbwwbbwwbb 6
-    // bbwwbbwwbbwwbbww 7
+    //
+    // wwbbwwbbwwbbwwbb   0
+    // bbwwbbwwbbwwbbww   1
+    // wwbbwwbbwwbbwwbb   2
+    // bbwwbbwwbbwwbbww   3
+    // wwbbwwbbwwbbwwbb   4
+    // bbwwbbwwbbwwbbww   5
+    // wwbbwwbbwwbbwwbb   6
+    // bbwwbbwwbbwwbbww   7
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(0, 0, boardWidth, boardHeight, textPaint);
+        canvas.drawRect(0, 0, boardWidth, boardHeight, blackPaint);
+        int textXLeft = borderHorizontalTextOffset;
+        int textXRight= this.boardWidth-borderThicknessSides + borderHorizontalTextOffset;
+        int textY = borderThicknessTops-borderVerticalTextOffset;
+        int textYBottom = boardHeight - borderVerticalTextOffset;
         for(int i = 0; i < 8;++i){
-            int textX = 0;
-            int textY = 0;
-            canvas.drawText('A'+i + "",textX,textY,textPaint);
+            int textX = borderThicknessSides-textHorizontalOffset + (widthPerCol / 2) +((widthPerCol)* (i));
+            int textYSides = borderThicknessTops-textVerticalOffset + (heightPerLine / 2) +((heightPerLine)* (i));
+            canvas.drawText((char)('A'+i) + "",textX,textY,textPaint);
+            canvas.drawText((char)('A'+i) + "",textX,textYBottom,textPaint);
+            canvas.drawText((i+1)+"",textXLeft,textYSides,textPaint);
+            canvas.drawText((i+1)+"",textXRight,textYSides,textPaint);
         }
 
         GamePiece gp = Chess.getCurrentSelectedPiece();
@@ -171,6 +180,8 @@ public class BoardView extends View {
         textHorizontalOffset = (int) (this.widthPerCol * 0.15);
         textVerticalOffset = (int) (this.heightPerLine * -0.15);
 
+        borderVerticalTextOffset = (int)(borderThicknessTops * 0.15);
+        borderHorizontalTextOffset = (int)(borderThicknessSides * 0.15);
         super.onSizeChanged(w, h, oldw, oldh);
     }
 }
