@@ -1,8 +1,14 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Game;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
@@ -26,13 +32,12 @@ public class Pawn extends GamePiece {
         Point pointInGame = this.getPositionInBoard();
         int dist = 2;
         if(firstMove) dist = 3;
-        if(this.getSide() == BLACK_SIDE){//Black side goes north and only north
+        if (this.getSide() == BLACK_SIDE) {//Black side goes north
             for(int i = pointInGame.getLine()-1; i > pointInGame.getLine()-dist;--i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
                 else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
             }
-        }
-        if(this.getSide() == Game.WHITE_SIDE){//White side goes south and only north
+        } else if (this.getSide() == Game.WHITE_SIDE) {//White side goes south
             for(int i = pointInGame.getLine()+1; i < pointInGame.getLine()+dist;++i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
                 else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
@@ -44,7 +49,7 @@ public class Pawn extends GamePiece {
     @Override
     public boolean Move(Point newPos) {
         Point op = this.getPositionInBoard();
-        boolean r = super.Move(newPos);
+        boolean r = this.setPositionInBoard(newPos);
         if(r) {
             if(firstMoveUsed) firstMoveUsed = false;
             if(firstMove) {

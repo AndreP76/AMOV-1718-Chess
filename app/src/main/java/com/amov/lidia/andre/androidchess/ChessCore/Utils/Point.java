@@ -21,16 +21,16 @@ public class Point {
         return Col;
     }
 
+    public void setCol(int col) {
+        Col = col;
+    }
+
     public int getLine() {
         return Line;
     }
 
     public void setLine(int line) {
         Line = line;
-    }
-
-    public void setCol(int col) {
-        Col = col;
     }
 
     @Override
@@ -43,5 +43,10 @@ public class Point {
 
     public Point sum(Point point) {
         return new Point(this.getLine() + point.getLine(), this.getCol() + point.getCol());
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.getLine() + "," + this.getCol() + ")";
     }
 }

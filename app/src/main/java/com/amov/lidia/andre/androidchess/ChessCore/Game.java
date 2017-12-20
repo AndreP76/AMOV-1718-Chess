@@ -1,8 +1,18 @@
 package com.amov.lidia.andre.androidchess.ChessCore;
 
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Pieces.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.NoKingException;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Bishop;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.King;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Knight;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Pawn;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Queen;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Rook;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -21,6 +31,7 @@ public class Game extends Observable {
     private short CurrentPlayer;
     private Player WhitePlayer;
     private Player BlackPlayer;
+    private GamePiece currentSelectedPiece;
 
     public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm) {
         this.gameMode = gm;
@@ -82,7 +93,6 @@ public class Game extends Observable {
             GameBoard.AllPieces.addAll(SidesPieces[WHITE_SIDE]);
             WhitePlayer.addPieces(SidesPieces[WHITE_SIDE]);
             BlackPlayer.addPieces(SidesPieces[BLACK_SIDE]);
-
         } catch (AlreadyFilledException e) {
             e.printStackTrace();
         }
@@ -120,8 +130,8 @@ public class Game extends Observable {
         } else return false;
     }
 
-    public Short getCurrentPlayer() {
-        return CurrentPlayer;
+    public Player getCurrentPlayer() {
+        return CurrentPlayer == WHITE_SIDE ? WhitePlayer : BlackPlayer;
     }
 
     /**
@@ -140,17 +150,24 @@ public class Game extends Observable {
     }
 
     public boolean executeMove(Move m){
+        if (m instanceof Attack) return executeMove((Attack) m);
         if(m.isValidMove()) {
-            m.getPiece().setPositionInBoard(m.getDestination());
+            moveCommons();
+            m.getPiece().Move(m.getDestination());
             return true;
         }
         return false;
     }
 
+    private void moveCommons() {
+        CurrentPlayer = CurrentPlayer == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE;
+        setCurrentSelectedPiece(null);
+    }
+
     public boolean executeMove(Attack a){
         if(a.isValidMove()){
-            ChessTile ct = GameBoard.getTile(a.getDestination());
-            a.getPiece().setPositionInBoard(a.getDestination());
+            moveCommons();
+            a.getPiece().Move(a.getDestination());
             destroyPiece(a.getAttackedPiece());
             return true;
         }
@@ -162,6 +179,18 @@ public class Game extends Observable {
         else if(attackedPiece.getSide() == WHITE_SIDE) {SidesPieces[WHITE_SIDE].remove(attackedPiece);WhitePlayer.removePiece(attackedPiece);}
 
         GameBoard.AllPieces.remove(attackedPiece);
+    }
+
+    public GamePiece getCurrentSelectedPiece() {
+        return currentSelectedPiece;
+    }
+
+    public void setCurrentSelectedPiece(GamePiece currentSelectedPiece) {
+        this.currentSelectedPiece = currentSelectedPiece;
+    }
+
+    public short getCurrentPlayerSide() {
+        return CurrentPlayer;
     }
 
     public GameMode getGameMode() {

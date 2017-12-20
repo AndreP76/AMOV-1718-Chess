@@ -1,12 +1,16 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
-import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils.NextDir;
 
 public class Rook extends GamePiece {
@@ -35,7 +39,7 @@ public class Rook extends GamePiece {
                 ChessTile t = this.getGameBoard().getTile(new Point(Line,Col));
                 if(t != null){
                     GamePiece p = t.getPieceInTile();
-                    if(p != null){
+                    if (p == null) {
                         ALM.add(new Move(this,new Point(Line,Col)));
                     }else break;
                 } else break;

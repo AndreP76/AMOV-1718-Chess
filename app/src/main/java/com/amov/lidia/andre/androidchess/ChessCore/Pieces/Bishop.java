@@ -1,12 +1,16 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
-import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils.NextDir;
 
 public class Bishop extends GamePiece{
@@ -32,7 +36,7 @@ public class Bishop extends GamePiece{
             int Line = pointInBoard.getLine() + LineIncrement;
             int Col = pointInBoard.getCol() + ColIncrement;
             while (Line >= 0 && Col >= 0) {
-                if (this.getGameBoard().getTile(new Point(Line, Col)) != null && this.getGameBoard().getTile(new Point(Line, Col)) != null) {//empty, valid tile
+                if (this.getGameBoard().getTile(new Point(Line, Col)) != null && this.getGameBoard().getTile(new Point(Line, Col)).getPieceInTile() == null) {//empty, valid tile
                     ALM.add(new Move(this, new Point(Line, Col), this.getName(), this.getLetter(), this.getSide()));
                 } else break;
                 Line += LineIncrement;

@@ -18,6 +18,12 @@ import java.util.ArrayList;
  * Created by andre on 12/15/17.
  */
 
+//TODO : torres so andam para a direita e para baixo
+//TODO : as peças nao podem atacar, embora os ataques estejam prontos no nucleo
+//TODO : os bispos nao andam numa das direçoes
+//DONE : por alguma razao o metodo move dos peoes nao está a ser chamado
+//declarado o metodo move como abstract e implementado
+
 public class Chess extends Application {
     public static final String FILE_NAME = "history.dat";
     public static final String APP_TAG = "AMovChessGame: ";
@@ -31,14 +37,12 @@ public class Chess extends Application {
         historicos = new ArrayList<>();
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        lerHistoricos();
+    public static GamePiece getCurrentSelectedPiece() {
+        return currentGame.getCurrentSelectedPiece();
     }
 
-    public static GamePiece getCurrentSelectedPiece() {
-        return currentSelectedPiece;
+    public static void setCurrentSelectedPiece(GamePiece currentSelectedPiece) {
+        currentGame.setCurrentSelectedPiece(currentSelectedPiece);
     }
 
     public static Game getCurrentGame() {
@@ -90,5 +94,11 @@ public class Chess extends Application {
 
     public static ArrayList<Historico> getHistoricos(){
         return historicos;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        lerHistoricos();
     }
 }
