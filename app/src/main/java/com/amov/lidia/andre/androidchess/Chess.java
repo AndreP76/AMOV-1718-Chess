@@ -24,6 +24,12 @@ import java.util.ArrayList;
 //DONE : por alguma razao o metodo move dos peoes nao está a ser chamado
 //declarado o metodo move como abstract e implementado
 
+//TODO : torres so andam para a direita e para baixo
+//TODO : as peças nao podem atacar, embora os ataques estejam prontos no nucleo
+//TODO : os bispos nao andam numa das direçoes
+//DONE : por alguma razao o metodo move dos peoes nao está a ser chamado
+//declarado o metodo move como abstract e implementado
+
 public class Chess extends Application {
     public static final String FILE_NAME = "history.dat";
     public static final String APP_TAG = "AMovChessGame: ";

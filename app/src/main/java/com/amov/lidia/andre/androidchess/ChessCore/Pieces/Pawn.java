@@ -32,7 +32,7 @@ public class Pawn extends GamePiece {
         Point pointInGame = this.getPositionInBoard();
         int dist = 2;
         if(firstMove) dist = 3;
-        if (this.getSide() == BLACK_SIDE) {//Black side goes north
+        if (this.getSide() == BLACK_SIDE) {//Black side goes north and only north
             for(int i = pointInGame.getLine()-1; i > pointInGame.getLine()-dist;--i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
                 else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
@@ -49,7 +49,7 @@ public class Pawn extends GamePiece {
     @Override
     public boolean Move(Point newPos) {
         Point op = this.getPositionInBoard();
-        boolean r = this.setPositionInBoard(newPos);
+        boolean r = super.Move(newPos);
         if(r) {
             if(firstMoveUsed) firstMoveUsed = false;
             if(firstMove) {
