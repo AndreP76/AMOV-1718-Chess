@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Lídia on 19/12/2017.
@@ -55,14 +56,7 @@ public class Historico implements Serializable {
         this.vencedor = vencedor;
     }
 
-    class Jogada implements Serializable {
-        String player1, player2, gameMode, descricao;
-
-        public Jogada(String player1, String player2, String gameMode, String descricao) {
-            this.player1 = player1;
-            this.player2 = player2;
-            this.gameMode = gameMode;
-            this.descricao = descricao;
-        }
+    public List<Jogada> getJogadas(){
+        return jogadas;
     }
 }

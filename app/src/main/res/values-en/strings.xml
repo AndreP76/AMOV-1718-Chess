@@ -13,4 +13,21 @@
 
     <string name="historico">History</string>
     <string name="placeholder">placeholder</string>
+    <string name="blank_space">" "</string>
+
+    <!-- strings para descrição das jogadas -->
+    <string name="versus">vs.</string>
+    <string name="bishop">Bishop</string>
+    <string name="black">black</string>
+    <string name="king">King</string>
+    <string name="knight">Knight</string>
+    <string name="pawn">Pawn</string>
+    <string name="queen">Queen</string>
+    <string name="rook">Rook</string>
+    <string name="white">white</string>
+    <string name="game_end">Game ended - Winner</string>
+    <string name="game_mode_changed">Game mode changed to</string>
+    <string name="game_start">Game started</string>
+    <string name="piece_attack">attacked</string>
+    <string name="piece_moved">moved to</string>
 </resources>
