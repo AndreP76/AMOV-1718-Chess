@@ -60,20 +60,26 @@ public class Chess extends Application {
     }
 
     //TODO - Adicionar objeto Historico ao ArrayList no final de um jogo
-    public static void addHistorico(Historico h){
+    public static void addHistorico(Historico h) {
         historicos.add(h);
         gravarHistoricos();
     }
 
-    public static void gravarHistoricos(){
+    public static void removeHistorico(int index) {
+        if (index >= 0 && index < historicos.size())
+            historicos.remove(index);
+        gravarHistoricos();
+    }
+
+    public static void gravarHistoricos() {
         try {
             FileOutputStream fos = chess.openFileOutput(FILE_NAME, MODE_APPEND);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(historicos);
             fos.close();
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             Log.e(APP_TAG, "Ficheiro não encontrado (escrita).", e);
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.e(APP_TAG, "Erro ao gravar histórico.", e);
         }
     }
@@ -94,11 +100,11 @@ public class Chess extends Application {
             Log.e(APP_TAG, "Erro ao ler histórico.", e);
         }
 
-        if(historicos == null)
+        if (historicos == null)
             historicos = new ArrayList<>();
     }
 
-    public static ArrayList<Historico> getHistoricos(){
+    public static ArrayList<Historico> getHistoricos() {
         return historicos;
     }
 
