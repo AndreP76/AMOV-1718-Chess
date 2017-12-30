@@ -14,10 +14,11 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class Game extends Observable {
+public class Game extends Observable implements Serializable {
     public static final short WHITE_SIDE = 0;
     public static final short BLACK_SIDE = 1;
 
@@ -33,10 +34,13 @@ public class Game extends Observable {
     private Player BlackPlayer;
     private GamePiece currentSelectedPiece;
 
+    private ArrayList<OnPieceMoveListenerInterface> onPieceMoveListener;
+
     public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm) {
         this.gameMode = gm;
         this.WhitePlayer = WhitePlayer == null ? new Player() : WhitePlayer;
         this.BlackPlayer = BlackPlayer == null ? new Player() : BlackPlayer;
+        onPieceMoveListener = new ArrayList<>();
         CurrentPlayer = StartSide;
         GameBoard = new Board();
         GameBoard.AllPieces = new ArrayList<>();
@@ -98,11 +102,31 @@ public class Game extends Observable {
         }
     }
 
-    public static <T extends Move> T ListContainsMove(ArrayList<T> M, Point originPoint, Point destinationPoint) {
+    public static Move PointCanBeMovedTo(ArrayList<Move> M, Point destinationPoint) {
         if (M == null) return null;
         for (int i = 0; i < M.size(); ++i) {
-            if (M.get(i).getDestination().equals(destinationPoint) && M.get(i).getOrigin().equals(originPoint)) {
+            if (M.get(i).getDestination().equals(destinationPoint)) {
                 return M.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static Attack PieceIsAttacked(ArrayList<Attack> M, GamePiece piece) {
+        for (int i = 0; i < M.size(); ++i) {
+            Attack a = M.get(i);
+            if (a.getAttackedPiece().equals(piece)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public static Attack PointIsAttacked(ArrayList<Attack> M, Point p) {
+        for (int i = 0; i < M.size(); ++i) {
+            Attack a = M.get(i);
+            if (a.getAttackedPiece().getPositionInBoard().equals(p)) {
+                return a;
             }
         }
         return null;
@@ -112,7 +136,7 @@ public class Game extends Observable {
         return GameBoard;
     }
 
-    public boolean Move(Point pointOrigin, Point pointDestination) {
+    /*public boolean Move(Point pointOrigin, Point pointDestination) {
         GamePiece Origin = GameBoard.getPieceInPoint(pointOrigin);
         if (Origin != null) {//valid piece
             if (Origin.getSide() == CurrentPlayer) {
@@ -128,7 +152,7 @@ public class Game extends Observable {
                 } else return false;
             } else return false;
         } else return false;
-    }
+    }*/
 
     public Player getCurrentPlayer() {
         return CurrentPlayer == WHITE_SIDE ? WhitePlayer : BlackPlayer;
@@ -138,11 +162,11 @@ public class Game extends Observable {
      * @return -1 if the game is still running, or the winning side if the game ends
      */
     public int CheckGameEnd() throws NoKingException{
-            if(GameBoard.isKingInDanger(WHITE_SIDE)){
-                return GameBoard.canKingEscape(WHITE_SIDE) ? -1 : BLACK_SIDE;
-            }else if(GameBoard.isKingInDanger(BLACK_SIDE)){
-                return GameBoard.canKingEscape(BLACK_SIDE) ? -1 : WHITE_SIDE;
-            }else return -1;
+        if (GameBoard.isKingInDanger(WHITE_SIDE)) {//if the white king is in danger
+            return GameBoard.canKingEscape(WHITE_SIDE) ? -1 : BLACK_SIDE;
+        } else if (GameBoard.isKingInDanger(BLACK_SIDE)) {
+            return GameBoard.canKingEscape(BLACK_SIDE) ? -1 : WHITE_SIDE;
+        } else return -1;
     }
 
     public ArrayList<GamePiece> getAllPieces() {
@@ -154,6 +178,9 @@ public class Game extends Observable {
         if(m.isValidMove()) {
             moveCommons();
             m.getPiece().Move(m.getDestination());
+            if (onPieceMoveListener != null) {
+                notifyMoveObservers();
+            }
             return true;
         }
         return false;
@@ -169,6 +196,7 @@ public class Game extends Observable {
             moveCommons();
             a.getPiece().Move(a.getDestination());
             destroyPiece(a.getAttackedPiece());
+            notifyMoveObservers();
             return true;
         }
         return false;
@@ -203,5 +231,16 @@ public class Game extends Observable {
 
     public Player getBlackPlayer() {
         return BlackPlayer;
+    }
+
+    public void addMoveListener(OnPieceMoveListenerInterface boardView) {
+        if (!onPieceMoveListener.contains(boardView))
+            onPieceMoveListener.add(boardView);
+    }
+
+    private void notifyMoveObservers() {
+        for (int i = 0; i < onPieceMoveListener.size(); ++i) {
+            onPieceMoveListener.get(i).onMove();
+        }
     }
 }

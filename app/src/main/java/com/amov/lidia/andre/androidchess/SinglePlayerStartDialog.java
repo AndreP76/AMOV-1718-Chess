@@ -3,7 +3,6 @@ package com.amov.lidia.andre.androidchess;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ public class SinglePlayerStartDialog extends DialogFragment{
             public void onClick(DialogInterface dialog, int which) {
                 Intent toLoadScreenActivity = new Intent(getActivity(),GameActivity.class);
                 toLoadScreenActivity.putExtra("gameMode","single");
+                Chess.setCurrentGame(null);
                 startActivity(toLoadScreenActivity);
             }
         }).create();

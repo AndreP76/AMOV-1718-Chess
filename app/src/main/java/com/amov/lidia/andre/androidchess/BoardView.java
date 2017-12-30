@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
+import com.amov.lidia.andre.androidchess.ChessCore.OnPieceMoveListenerInterface;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
@@ -17,11 +18,14 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
+
 /**
  * Created by andre on 12/15/17.
  */
 
-public class BoardView extends View {
+public class BoardView extends View implements OnPieceMoveListenerInterface {
+    private Paint whitePaint;
     private Paint bluePaint;
     private Paint yellowPaint;
     private Paint blackPaint;
@@ -47,9 +51,17 @@ public class BoardView extends View {
 
     private Game currentGame;
 
+    private boolean whiteSideWon;
+    private boolean blackSideWon;
+
+    private Context ctx;
+
     public BoardView(Context context) {
         super(context);
+        this.ctx = context;
+        whiteSideWon = blackSideWon = false;
         currentGame = Chess.getCurrentGame();
+        currentGame.addMoveListener(this);
         yellowPaint = new Paint(Paint.DITHER_FLAG);
         yellowPaint.setColor(ContextCompat.getColor(context, R.color.colorYellowTile));
         yellowPaint.setStyle(Paint.Style.FILL);
@@ -85,6 +97,10 @@ public class BoardView extends View {
         textPaint = new Paint(Paint.DITHER_FLAG);
         textPaint.setColor(ContextCompat.getColor(context, R.color.colorBoardText));
         textPaint.setStyle(Paint.Style.FILL);
+
+        whitePaint = new Paint(Paint.DITHER_FLAG);
+        whitePaint.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        whitePaint.setStyle(Paint.Style.FILL);
     }
 
     // 0 1 2 3 4 5 6 7
@@ -101,7 +117,7 @@ public class BoardView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(0, 0, boardWidth, boardHeight, blackPaint);
+        canvas.drawRect(0, 0, boardWidth, boardHeight, currentGame.getCurrentPlayerSide() == WHITE_SIDE ? blackPaint : whitePaint);
         int textXLeft = borderHorizontalTextOffset;
         int textXRight = this.boardWidth - borderThicknessSides + borderHorizontalTextOffset;
         int textY = borderThicknessTops - borderVerticalTextOffset;
@@ -109,6 +125,7 @@ public class BoardView extends View {
         for (int i = 0; i < 8; ++i) {
             int textX = borderThicknessSides - textHorizontalOffset + (widthPerCol / 2) + ((widthPerCol) * (i));
             int textYSides = borderThicknessTops - textVerticalOffset + (heightPerLine / 2) + ((heightPerLine) * (i));
+            textPaint.setColor(currentGame.getCurrentPlayerSide() == WHITE_SIDE ? ContextCompat.getColor(ctx, R.color.colorWhite) : ContextCompat.getColor(ctx, R.color.colorBlack));
             canvas.drawText((char) ('A' + i) + "", textX, textY, textPaint);
             canvas.drawText((char) ('A' + i) + "", textX, textYBottom, textPaint);
             canvas.drawText((i + 1) + "", textXLeft, textYSides, textPaint);
@@ -129,9 +146,9 @@ public class BoardView extends View {
                 if (gp != null) {
                     if (i == gp.getPositionInBoard().getLine() && j == gp.getPositionInBoard().getCol())
                         p = greenPaint;
-                    else if (Game.ListContainsMove(Attacks, gp.getPositionInBoard(), new Point(i, j)) != null) {
+                    else if (Game.PointIsAttacked(Attacks, new Point(i, j)) != null) {
                         p = redPaint;
-                    } else if (Game.ListContainsMove(Movements, gp.getPositionInBoard(), new Point(i, j)) != null) {
+                    } else if (Game.PointCanBeMovedTo(Movements, new Point(i, j)) != null) {
                         p = bluePaint;
                     } else {
                         p = DefaultResolvePaint(i, j);
@@ -152,7 +169,12 @@ public class BoardView extends View {
             GamePiece p = AllPieces.get(i);
             int startX = (p.getPositionInBoard().getCol()) * widthPerCol + borderThicknessSides + textHorizontalOffset;
             int startY = (p.getPositionInBoard().getLine() + 1) * heightPerLine + borderThicknessTops + textVerticalOffset;
-            canvas.drawText(p.getUnicodeLetter(), startX, startY, p.getSide() == Game.WHITE_SIDE ? whiteSidePaint : blackSidePaint);
+            canvas.drawText(p.getUnicodeLetter(), startX, startY, p.getSide() == WHITE_SIDE ? whiteSidePaint : blackSidePaint);
+        }
+
+        if (whiteSideWon || blackSideWon) {
+            canvas.drawRect(0, boardHeight * 0.25f, boardWidth, boardHeight * 0.75f, whiteSideWon ? blackSidePaint : whiteSidePaint);
+            canvas.drawText(whiteSideWon ? "White side victory!" : "Black side victory!", 0, boardHeight * 0.5f, whiteSideWon ? whiteSidePaint : blackSidePaint);
         }
     }
 
@@ -205,13 +227,13 @@ public class BoardView extends View {
             return true;//Not a valid line
 
         if (Chess.getCurrentSelectedPiece() != null) {//selecting a destination
-            Move m = Game.ListContainsMove(Chess.getCurrentSelectedPiece().getPossibleMoves(), Chess.getCurrentSelectedPiece().getPositionInBoard(), new Point(LineIndex, ColIndex));
+            Move m = Game.PointCanBeMovedTo(Chess.getCurrentSelectedPiece().getPossibleMoves(), new Point(LineIndex, ColIndex));
             if (m != null) {//this is a valid move
                 Chess.getCurrentGame().executeMove(m);
                 invalidate();
                 return true;
             } else {//this may be an attack
-                Attack a = Game.ListContainsMove(Chess.getCurrentSelectedPiece().getPossibleAttacks(), Chess.getCurrentSelectedPiece().getPositionInBoard(), new Point(LineIndex, ColIndex));
+                Attack a = Game.PointIsAttacked(Chess.getCurrentSelectedPiece().getPossibleAttacks(), new Point(LineIndex, ColIndex));
                 if (a != null) {//this in an attack
                     Chess.getCurrentGame().executeMove(a);
                     invalidate();
@@ -272,5 +294,19 @@ public class BoardView extends View {
             if (pos >= beginingOfInterval && pos < endOfInterval) return i;
         }
         return -1;//Not in interval
+    }
+
+    @Override
+    public void onMove() {
+        int end = currentGame.CheckGameEnd();
+        if (end > -1) {
+            if (end == WHITE_SIDE) {
+                Log.v("[GAME] ::", "White side has won!");
+                whiteSideWon = true;
+            } else {
+                Log.v("[GAME] ::", "Black side has won!");
+                blackSideWon = true;
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
 
 public class GameFragment extends Fragment {
     GameMode gameMode;
-
+    BoardView BV;
     public GameFragment() {
 
     }
@@ -33,7 +33,7 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //return inflater.inflate(R.layout.fragment_game, container);
-        return new BoardView(getActivity());
+        return (BV = new BoardView(getActivity()));
     }
 
     @Override
@@ -43,10 +43,12 @@ public class GameFragment extends Fragment {
             Bundle parameters = getArguments();
             String PlayerMode = parameters.getString("gameMode");
             if (PlayerMode != null && PlayerMode.toLowerCase().equals("single")) {
-                gameMode = GameMode.SinglePlayer;
-                Player player1 = new Player("Human Player", false);
-                Player player2 = new Player();
-                Chess.setCurrentGame(new Game(player1, player2,gameMode));
+                if (Chess.getCurrentGame() == null) {
+                    gameMode = GameMode.SinglePlayer;
+                    Player player1 = new Player("Human Player", false);
+                    Player player2 = new Player();
+                    Chess.setCurrentGame(new Game(player1, player2, gameMode));
+                }
             }
         }
     }

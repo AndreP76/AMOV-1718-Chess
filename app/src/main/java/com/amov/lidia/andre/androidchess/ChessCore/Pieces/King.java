@@ -1,12 +1,18 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
 public class King extends GamePiece {
     public King(Board B, Point Position, short Side) throws AlreadyFilledException {
@@ -26,7 +32,7 @@ public class King extends GamePiece {
             Direction d = DirectionUtils.IndexToDir(i);
             Point v = DirectionUtils.DirectionToVector(d);
             ChessTile T = this.getGameBoard().getTile(new Point(p.getLine() + v.getLine(),p.getCol() + v.getCol()));
-            if(T != null && T.getPieceInTile() == null){
+            if (T != null && T.getPieceInTile() == null && !this.getGameBoard().TileIsAttacked(T, this.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE)) {
                 ALM.add(new Move(this,T.getCoordinatesInBoard()));
             }
         }
@@ -43,7 +49,7 @@ public class King extends GamePiece {
             Direction d = DirectionUtils.IndexToDir(i);
             Point v = DirectionUtils.DirectionToVector(d);
             ChessTile T = this.getGameBoard().getTile(new Point(p.getLine() + v.getLine(),p.getCol() + v.getCol()));
-            if(T != null && T.getPieceInTile() != null && T.getPieceInTile().getSide() != this.getSide()){
+            if (T != null && T.getPieceInTile() != null && T.getPieceInTile().getSide() != this.getSide() && !this.getGameBoard().TileIsAttacked(T, this.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE)) {
                 ALA.add(new Attack(this,T.getPieceInTile()));
             }
         }

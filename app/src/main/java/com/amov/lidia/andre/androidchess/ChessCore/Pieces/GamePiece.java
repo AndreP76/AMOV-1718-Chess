@@ -1,8 +1,10 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
@@ -65,4 +67,12 @@ public abstract class GamePiece {
     }
 
     public abstract String getName();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof GamePiece) {
+            GamePiece gp = (GamePiece) obj;
+            return getPositionInBoard().equals(gp.getPositionInBoard()) && gp.getSide() == this.getSide() && this.getName().equals(gp.getName());
+        } else return false;
+    }
 }

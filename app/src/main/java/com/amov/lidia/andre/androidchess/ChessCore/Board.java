@@ -1,10 +1,13 @@
 package com.amov.lidia.andre.androidchess.ChessCore;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.NoKingException;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.King;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
 
@@ -14,11 +17,10 @@ import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 public class Board {
     public static final int STANDARD_BOARD_LENGTH = 8;
     public static final int STANDARD_BOARD_WIDTH = 8;
+    ArrayList<GamePiece> AllPieces;
+    ChessTile[][] Tiles;
     private int BoardLines;
     private int BoardCols;
-    ArrayList<GamePiece> AllPieces;
-
-    ChessTile[][] Tiles;
 
     Board(int Lines, int Cols){
         this.BoardLines = Lines;
@@ -169,26 +171,29 @@ public class Board {
 
 
     public boolean isKingInDanger(short Side) throws NoKingException {
-        King k = null;
-        for (GamePiece gp : AllPieces) {
-            if (gp instanceof King && gp.getSide() == Side) {
-                k = (King) gp;
-            }
-        }
-
+        King k = (King) getPieceOfSide(King.class, Side);
         if(k != null) {
-            return TileIsAttacked(k.getPositionInBoard(),k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE);
+            return TileIsAttackedBySide(k.getPositionInBoard(), k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE);
         }else throw new NoKingException(Side == WHITE_SIDE ? "White " : "Black" + " side has no king! How can this happen ?");
     }
 
-    private boolean TileIsAttacked(Point positionInBoard, short side) {
+    private GamePiece getPieceOfSide(Class pieceClass, short side) {
+        for (GamePiece gp : AllPieces) {
+            if (pieceClass.isInstance(gp) && gp.getSide() == side) {
+                return gp;
+            }
+        }
+        return null;
+    }
+
+    private boolean TileIsAttackedBySide(Point positionInBoard, short side) {
         ArrayList<Attack> OtherSideAttacks = new ArrayList<>();
         for(GamePiece gp : AllPieces){
-            if(gp.getSide() != side){
+            if (gp.getSide() == side) {
                 OtherSideAttacks.addAll(gp.getPossibleAttacks());
             }
         }
-        return Game.ListContainsMove(OtherSideAttacks,null,positionInBoard) == null;
+        return Game.PointIsAttacked(OtherSideAttacks, positionInBoard) == null;
     }
 
     public boolean canKingEscape(short Side) {
@@ -203,9 +208,14 @@ public class Board {
             ArrayList<Move> KingPossibleMoves = k.getPossibleMoves();
             for (Move m:
                  KingPossibleMoves) {
-                if(!TileIsAttacked(m.getDestination(),k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE )) return true;
+                if (!TileIsAttackedBySide(m.getDestination(), k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE))
+                    return true;
             }
             return false;// GG, king is ded, long live the king
         }else throw new NoKingException(Side == WHITE_SIDE ? "White " : "Black" + " side has no king! How can this happen ?");
+    }
+
+    public boolean TileIsAttacked(ChessTile t, short side) {
+        return TileIsAttackedBySide(t.getCoordinatesInBoard(), side);
     }
 }
