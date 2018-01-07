@@ -4,14 +4,11 @@ import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
-
-import static com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils.NextDir;
 
 public class Rook extends GamePiece {
     public Rook(Board B, Point Position, short Side) throws AlreadyFilledException {
@@ -25,27 +22,18 @@ public class Rook extends GamePiece {
     @Override
     public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
-        int LineIncrement = 0;
-        int ColIncrement = 0;
-        for(Direction i = Direction.NORTH; i != Direction.SOUTH; i = NextDir(NextDir(i))) {
-            Point V = DirectionUtils.DirectionToVector(i);
-            LineIncrement = V.getLine();
-            ColIncrement = V.getCol();
+        Point thisPosition = this.getPositionInBoard();
+        for (int i = 0; i <= 7; ++i) {
+            Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
+            Point p = thisPosition.sum(V);
 
-            int Line = this.getPositionInBoard().getLine() + LineIncrement;
-            int Col = this.getPositionInBoard().getCol() + ColIncrement;
-
-            while (Line >= 0 && Line < this.getGameBoard().getBoardLines() && Col >= 0 && Col < this.getGameBoard().getBoardCols()){
-                ChessTile t = this.getGameBoard().getTile(new Point(Line,Col));
-                if(t != null){
-                    GamePiece p = t.getPieceInTile();
-                    if (p == null) {
-                        ALM.add(new Move(this,new Point(Line,Col)));
-                    }else break;
+            ChessTile t;
+            while ((t = this.getGameBoard().getTile(p)) != null) {
+                GamePiece gp = t.getPieceInTile();
+                if (gp == null) {
+                    ALM.add(new Move(this, p));
                 } else break;
-
-                Line += LineIncrement;
-                Col += ColIncrement;
+                p = p.sum(V);
             }
         }
 
@@ -57,26 +45,20 @@ public class Rook extends GamePiece {
         ArrayList<Attack> ALA = new ArrayList<>();
         int LineIncrement = 0;
         int ColIncrement = 0;
-        for(Direction i = Direction.NORTH; i != Direction.SOUTH; i = NextDir(NextDir(i))) {
-            Point V = DirectionUtils.DirectionToVector(i);
-            LineIncrement = V.getLine();
-            ColIncrement = V.getCol();
+        Point thisPosition = this.getPositionInBoard();
+        for (int i = 0; i <= 7; ++i) {
+            Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
+            Point p = thisPosition.sum(V);
 
-            int Line = this.getPositionInBoard().getLine() + LineIncrement;
-            int Col = this.getPositionInBoard().getCol() + ColIncrement;
-
-            while (Line >= 0 && Line < this.getGameBoard().getBoardLines() && Col >= 0 && Col < this.getGameBoard().getBoardCols()){
-                ChessTile t = this.getGameBoard().getTile(new Point(Line,Col));
-                if(t != null){
-                    GamePiece p = t.getPieceInTile();
-                    if(p != null){
-                        if(p.getSide() != this.getSide())
-                            ALA.add(new Attack(this,p));
-                        break;
-                    }
-                } else break;
-                Line += LineIncrement;
-                Col += ColIncrement;
+            ChessTile t;
+            while ((t = this.getGameBoard().getTile(p)) != null) {
+                GamePiece gp = t.getPieceInTile();
+                if (gp != null) {
+                    if (gp.getSide() != this.getSide())
+                        ALA.add(new Attack(this, gp));
+                    break;
+                }
+                p = p.sum(V);
             }
         }
 

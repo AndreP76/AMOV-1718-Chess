@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amov.lidia.andre.androidchess.CameraHandler;
 import com.amov.lidia.andre.androidchess.ChessCore.Player;
 import com.amov.lidia.andre.androidchess.CustomDialogs.SelectProfileDialog;
 import com.amov.lidia.andre.androidchess.PlayerProfile;
@@ -42,9 +42,7 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     public static final String NEXT_ACTIVITY_ARGS_ID = "nextActivityArgs";
     public static final String NEXT_ACTIVITY_CLASS_ID = "nextClass";
     private static final int CAMERA_PERMISSION_REQUEST = 12345;
-    Camera camera;
-    boolean cameraActive = false;
-    BitmapDrawable capturedPicture = null;
+    Drawable capturedPicture = null;
     byte[] capturedPictureData;
     int howManyPlayers;
     int currentPayerCount;
@@ -55,6 +53,10 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     SurfaceHolder cameraPreviewHolder;
     EditText playerName;
     TextView playerID;
+
+    private boolean pictureTaken;
+
+    private CameraHandler camHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,63 +94,35 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCamera();
-            } else {
-                //TODO : add a default image here
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCamera();
+                } else {
+                    //TODO : add a default image here
+                }
             }
         }
     }
 
     private void startCamera() {
-        if (!cameraActive && camera == null) {
-            cameraPreview.setBackground(null);
-            int cameraCount = Camera.getNumberOfCameras();
-            int frontCameraIndex = -1;
-            for (int i = 0; i < cameraCount; ++i) {
-                Camera.CameraInfo CI = new Camera.CameraInfo();
-                Camera.getCameraInfo(i, CI);
-                if (CI.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
-                    frontCameraIndex = i;
-            }
+        int frontCameraIndex = CameraHandler.findFrontCamera();
 
-            camera = Camera.open(frontCameraIndex == -1 ? 0 : frontCameraIndex);
-            camera.lock();
-            cameraActive = true;
-            int orientationDegrees = 0;
-            switch (getResources().getConfiguration().orientation) {
-                case Configuration.ORIENTATION_LANDSCAPE: {
-                    orientationDegrees = 0;
-                    break;
-                }
-                case Configuration.ORIENTATION_PORTRAIT: {
-                    orientationDegrees = 90;
-                    break;
-                }
-            }
-            camera.setDisplayOrientation(orientationDegrees);
-            Camera.Parameters cp = camera.getParameters();
-            cp.setRotation(3 * orientationDegrees);
-            camera.setParameters(cp);
-            camera.startPreview();
-            try {
-                camera.setPreviewDisplay(cameraPreviewHolder);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        if (camHandler == null)
+            camHandler = new CameraHandler(frontCameraIndex);
+        else
+            camHandler.setCamera(frontCameraIndex);
+
+        //Toast.makeText(this, getString(R.string.errorOpeningCamera), Toast.LENGTH_SHORT).show();
+        capturedPicture = getDrawable(R.mipmap.bot_image);
+
+        camHandler.openCameraForPreview(cameraPreviewHolder);
     }
 
     private void stopCamera() {
-        if (camera != null) {
-            camera.stopPreview();
-            camera.unlock();
-            cameraActive = false;
-            camera.release();
-            camera = null;
-        }
+        if (camHandler != null)
+            camHandler.releaseAndCloseCamera();
     }
 
     public void acceptPlayerClick(View view) {
@@ -194,21 +168,25 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     }
 
     public void cameraButtonClicked(View view) {
-        if (camera != null && cameraActive) {
-            camera.takePicture(null, null, new Camera.PictureCallback() {
-                @Override
-                public void onPictureTaken(byte[] data, Camera camera) {
-                    stopCamera();
-                    takePictureButton.setText(R.string.resetPictureText);
-                    capturedPictureData = data;
-                    capturedPicture = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
-                    cameraPreview.setBackground(capturedPicture);
-                }
-            });
-        } else if (!cameraActive && capturedPicture != null) {
-            capturedPicture = null;
-            takePictureButton.setText(R.string.takePictureText);
-            startCamera();
+        if (camHandler != null) {
+            if (!pictureTaken) {
+                camHandler.takePicture(new Camera.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] data, Camera camera) {
+                        takePictureButton.setText(R.string.resetPictureText);
+                        capturedPictureData = data;
+                        stopCamera();
+                        capturedPicture = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+                        cameraPreview.setBackground(capturedPicture);
+                        pictureTaken = true;
+                    }
+                });
+            } else {
+                capturedPictureData = null;
+                capturedPicture = null;
+                takePictureButton.setText(R.string.takePictureText);
+                startCamera();
+            }
         }
     }
 
@@ -280,6 +258,24 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
             }
         });
         SPD.show();
+    }
+
+    @Override
+    protected void onPause() {
+        stopCamera();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //startCamera();
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopCamera();
+        super.onDestroy();
     }
 }
 

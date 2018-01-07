@@ -37,13 +37,16 @@ public class Queen extends GamePiece {
     @Override
     public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
+        Point queenPosition = this.getPositionInBoard();
         for(int i = 0; i < 9;++i){
             Direction d = DirectionUtils.IndexToDir(i);
             Point offset = DirectionUtils.DirectionToVector(d);
-            for(Point currentPoint = this.getPositionInBoard().sum(offset); this.getGameBoard().getTile(currentPoint) != null; currentPoint = currentPoint.sum(offset)){
-                if(this.getGameBoard().getTile(currentPoint).getPieceInTile() != null && this.getGameBoard().getTile(currentPoint).getPieceInTile().getSide() != this.getSide()){//an enemy
-                    ALA.add(new Attack(this,this.getGameBoard().getTile(currentPoint).getPieceInTile()));
-                    break;
+            for (Point currentPoint = queenPosition.sum(offset); this.getGameBoard().getTile(currentPoint) != null; currentPoint = currentPoint.sum(offset)) {
+                if (this.getGameBoard().getTile(currentPoint).getPieceInTile() != null) {//a piece
+                    if (this.getGameBoard().getTile(currentPoint).getPieceInTile().getSide() != this.getSide()) {// an enemy
+                        ALA.add(new Attack(this, this.getGameBoard().getTile(currentPoint).getPieceInTile()));
+                    }
+                    break;//break when we find a piece, enemy or not
                 }
             }
         }

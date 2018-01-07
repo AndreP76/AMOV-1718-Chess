@@ -101,6 +101,10 @@ public class Pawn extends GamePiece {
         return firstMoveUsed;
     }
 
+    public void setFirstMoveUsed(boolean firstMoveUsed) {
+        this.firstMoveUsed = firstMoveUsed;
+    }
+
     @Override
     public String getLetter() {
         return "P";

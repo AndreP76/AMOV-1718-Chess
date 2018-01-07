@@ -123,6 +123,36 @@ public class Game extends Observable implements Serializable {
         }
     }
 
+    public static Move PointCanBeMovedTo(ArrayList<Move> M, Point destinationPoint) {
+        if (M == null) return null;
+        for (int i = 0; i < M.size(); ++i) {
+            if (M.get(i).getDestination().equals(destinationPoint)) {
+                return M.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static Attack PieceIsAttacked(ArrayList<Attack> M, GamePiece piece) {
+        for (int i = 0; i < M.size(); ++i) {
+            Attack a = M.get(i);
+            if (a.getAttackedPiece().equals(piece)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public static Attack PointIsAttacked(ArrayList<Attack> M, Point p) {
+        for (int i = 0; i < M.size(); ++i) {
+            Attack a = M.get(i);
+            if (a.getAttackedPiece().getPositionInBoard().equals(p)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     private String translateGameMode(GameMode gm) {
         String str = "";
         switch (gm) {
@@ -171,36 +201,6 @@ public class Game extends Observable implements Serializable {
         itemHistorico.setTitle();
         itemHistorico.setVencedor(winner);
         Chess.addHistorico(itemHistorico);
-    }
-
-    public static Move PointCanBeMovedTo(ArrayList<Move> M, Point destinationPoint) {
-        if (M == null) return null;
-        for (int i = 0; i < M.size(); ++i) {
-            if (M.get(i).getDestination().equals(destinationPoint)) {
-                return M.get(i);
-            }
-        }
-        return null;
-    }
-
-    public static Attack PieceIsAttacked(ArrayList<Attack> M, GamePiece piece) {
-        for (int i = 0; i < M.size(); ++i) {
-            Attack a = M.get(i);
-            if (a.getAttackedPiece().equals(piece)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    public static Attack PointIsAttacked(ArrayList<Attack> M, Point p) {
-        for (int i = 0; i < M.size(); ++i) {
-            Attack a = M.get(i);
-            if (a.getAttackedPiece().getPositionInBoard().equals(p)) {
-                return a;
-            }
-        }
-        return null;
     }
 
     public Board getBoard() {
@@ -252,6 +252,13 @@ public class Game extends Observable implements Serializable {
     }
 
     private void moveCommons() {
+        for (GamePiece gp : SidesPieces[CurrentPlayer]) {
+            if (gp instanceof Pawn) {
+                Pawn p = (Pawn) gp;
+                p.setFirstMoveUsed(false);
+            }
+        }
+
         CurrentPlayer = CurrentPlayer == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE;
         setCurrentSelectedPiece(null);
     }
@@ -318,6 +325,12 @@ public class Game extends Observable implements Serializable {
 
     public void executeAIMove(int side) {
         Player p = getCurrentPlayer();
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ArrayList<GamePiece> pieces = p.getPieces();
         ArrayList<Attack> attacks = new ArrayList<>();

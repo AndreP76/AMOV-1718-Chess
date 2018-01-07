@@ -3,7 +3,6 @@ package com.amov.lidia.andre.androidchess.CustomDialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -38,7 +37,7 @@ public class SelectProfileDialog extends Dialog implements View.OnClickListener 
     private Bundle argsToAdd;
     private int playerID;
 
-    public SelectProfileDialog(@NonNull Context context, ArrayList<PlayerProfile> ALP, int playerID, Bundle argsToAdd) {
+    public SelectProfileDialog(Context context, ArrayList<PlayerProfile> ALP, int playerID, Bundle argsToAdd) {
         super(context);
         ctx = context;
         this.ALP = ALP;

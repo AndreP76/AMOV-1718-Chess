@@ -6,9 +6,10 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class GamePiece {
+public abstract class GamePiece implements Serializable {
     private Point PositionInBoard;
     private Board GameBoard;
     private short Side;
