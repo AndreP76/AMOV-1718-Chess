@@ -1,5 +1,7 @@
 package com.amov.lidia.andre.androidchess.ChessCore;
 
+import android.util.Log;
+
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.NoKingException;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Bishop;
@@ -17,6 +19,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Random;
 
 public class Game extends Observable implements Serializable {
     public static final short WHITE_SIDE = 0;
@@ -37,9 +40,10 @@ public class Game extends Observable implements Serializable {
     private ArrayList<OnPieceMoveListenerInterface> onPieceMoveListener;
 
     public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm) {
+        Log.d("[GAME CONSTRUCTOR] :: ", "New game created!");
         this.gameMode = gm;
-        this.WhitePlayer = WhitePlayer == null ? new Player() : WhitePlayer;
-        this.BlackPlayer = BlackPlayer == null ? new Player() : BlackPlayer;
+        this.WhitePlayer = WhitePlayer == null ? new Player(WHITE_SIDE) : WhitePlayer;
+        this.BlackPlayer = BlackPlayer == null ? new Player(BLACK_SIDE) : BlackPlayer;
         onPieceMoveListener = new ArrayList<>();
         CurrentPlayer = StartSide;
         GameBoard = new Board();
@@ -95,7 +99,9 @@ public class Game extends Observable implements Serializable {
 
             GameBoard.AllPieces.addAll(SidesPieces[BLACK_SIDE]);
             GameBoard.AllPieces.addAll(SidesPieces[WHITE_SIDE]);
+            assert WhitePlayer != null;
             WhitePlayer.addPieces(SidesPieces[WHITE_SIDE]);
+            assert BlackPlayer != null;
             BlackPlayer.addPieces(SidesPieces[BLACK_SIDE]);
         } catch (AlreadyFilledException e) {
             e.printStackTrace();
@@ -135,24 +141,6 @@ public class Game extends Observable implements Serializable {
     public Board getBoard() {
         return GameBoard;
     }
-
-    /*public boolean Move(Point pointOrigin, Point pointDestination) {
-        GamePiece Origin = GameBoard.getPieceInPoint(pointOrigin);
-        if (Origin != null) {//valid piece
-            if (Origin.getSide() == CurrentPlayer) {
-                ArrayList<Move> PieceAvailableMoves = Origin.getPossibleMoves();
-                Move destinationMove = ListContainsMove(PieceAvailableMoves, Origin.getPositionInBoard(), pointDestination);
-                if (destinationMove != null) {//valid move
-                    boolean ret = Origin.Move(destinationMove.getDestination());
-                    if (ret) {
-                        if (CurrentPlayer == BLACK_SIDE) CurrentPlayer = WHITE_SIDE;
-                        else CurrentPlayer = BLACK_SIDE;
-                    }
-                    return ret;
-                } else return false;
-            } else return false;
-        } else return false;
-    }*/
 
     public Player getCurrentPlayer() {
         return CurrentPlayer == WHITE_SIDE ? WhitePlayer : BlackPlayer;
@@ -241,6 +229,26 @@ public class Game extends Observable implements Serializable {
     private void notifyMoveObservers() {
         for (int i = 0; i < onPieceMoveListener.size(); ++i) {
             onPieceMoveListener.get(i).onMove();
+        }
+    }
+
+    public void executeAIMove(int side) {
+        Player p = getCurrentPlayer();
+
+        ArrayList<GamePiece> pieces = p.getPieces();
+        ArrayList<Attack> attacks = new ArrayList<>();
+        ArrayList<Move> moves = new ArrayList<>();
+        for (GamePiece gp : pieces) {
+            attacks.addAll(gp.getAttacks());
+            moves.addAll(gp.getMoves());
+        }
+
+        Random SR = new Random(System.currentTimeMillis());
+        boolean shouldAttack = SR.nextInt(100) > 50;
+        if (shouldAttack && attacks.size() > 0) {
+            executeMove(attacks.get(SR.nextInt(attacks.size())));
+        } else {
+            executeMove(moves.get(SR.nextInt(moves.size())));
         }
     }
 }

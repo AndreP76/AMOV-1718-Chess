@@ -30,4 +30,11 @@
     <string name="game_start">Game started</string>
     <string name="piece_attack">attacked</string>
     <string name="piece_moved">moved to</string>
+    <string name="takePictureText">Take Picture</string>
+    <string name="resetPictureText">Retake Picture</string>
+    <string name="registerPlayerNext">Next</string>
+    <string name="registerPlayerNameText">Name:</string>
+    <string name="player">Player</string>
+    <string name="loadMenuIcon">Load Profile</string>
+    <string name="cancelProfileLoad">Cancel</string>
 </resources>

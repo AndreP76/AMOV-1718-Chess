@@ -1,4 +1,4 @@
-package com.amov.lidia.andre.androidchess;
+package com.amov.lidia.andre.androidchess.CustomFragments;
 
 import android.app.Fragment;
 import android.net.Uri;
@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.amov.lidia.andre.androidchess.ChessCore.Game;
-import com.amov.lidia.andre.androidchess.ChessCore.Player;
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
+import com.amov.lidia.andre.androidchess.CustomViews.BoardView;
 
 public class GameFragment extends Fragment {
     GameMode gameMode;
@@ -20,10 +20,10 @@ public class GameFragment extends Fragment {
 
     }
 
-    public static GameFragment newInstance() {
-        Bundle args = new Bundle();
+    public static GameFragment newInstance(Bundle args) {
+        /*Bundle args = new Bundle();
 
-        args.putString("gameMode", "single");
+        args.putString("gameMode", "single");*/
         GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
@@ -39,18 +39,21 @@ public class GameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            Bundle parameters = getArguments();
-            String PlayerMode = parameters.getString("gameMode");
-            if (PlayerMode != null && PlayerMode.toLowerCase().equals("single")) {
-                if (Chess.getCurrentGame() == null) {
-                    gameMode = GameMode.SinglePlayer;
-                    Player player1 = new Player("Human Player", false);
-                    Player player2 = new Player();
-                    Chess.setCurrentGame(new Game(player1, player2, gameMode));
-                }
-            }
-        }
+//        if (getArguments() != null) {
+//            Bundle parameters = getArguments();
+//            String PlayerMode = parameters.getString("gameMode");
+//            if (PlayerMode != null && PlayerMode.toLowerCase().equals("single")) {
+//                if (Chess.getCurrentGame() == null) {
+//                    gameMode = GameMode.SinglePlayer;
+//                    Player player1 = (Player) parameters.getSerializable("Player1");
+//                    Player player2 = new Player(player1.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE);
+//                    Chess.setCurrentGame(new Game(player1, player2, gameMode));
+//                }
+//            }
+//        }
+
+        gameMode = Chess.getCurrentGame().gameMode;
+
     }
 
     public interface OnFragmentInteractionListener {

@@ -23,7 +23,7 @@ public class Bishop extends GamePiece{
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         Point pointInBoard = this.getPositionInBoard();
 
@@ -47,15 +47,15 @@ public class Bishop extends GamePiece{
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
         Point pointInBoard = this.getPositionInBoard();
 
         int LineIncrement = -1;
         int ColIncrement = -1;
 
-        for(Direction i = Direction.NORTHEAST; i != Direction.NORTHWEST; i = NextDir(NextDir(i))) {
-            Point V = DirectionUtils.DirectionToVector(i);
+        for (int i = 0; i < 9; i += 2) {
+            Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
             LineIncrement = V.getLine();
             ColIncrement = V.getCol();
 
@@ -78,6 +78,34 @@ public class Bishop extends GamePiece{
         }
 
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        ArrayList<Point> ALP = new ArrayList<>();
+        Point pointInBoard = this.getPositionInBoard();
+
+        int LineIncrement = -1;
+        int ColIncrement = -1;
+
+        for (int i = 0; i < 9; i += 2) {
+            Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
+            LineIncrement = V.getLine();
+            ColIncrement = V.getCol();
+
+            int Line = pointInBoard.getLine() + LineIncrement;
+            int Col = pointInBoard.getCol() + ColIncrement;
+            while (Line >= 0 && Col >= 0) {
+                ChessTile t = this.getGameBoard().getTile(new Point(Line, Col));
+                if (t != null) {
+
+                    ALP.add(new Point(Line, Col));
+                } else break; // we reached the end of the board;
+                Line += LineIncrement;
+                Col += ColIncrement;
+            }
+        }
+
+        return ALP;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Knight extends GamePiece {
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         Point p = this.getPositionInBoard();
         ArrayList<Move> ALM = new ArrayList<>();
         if (this.getGameBoard().getTile(new Point(p.getLine() - 2, p.getCol() - 1)) != null && this.getGameBoard().getTile(new Point(p.getLine() - 2, p.getCol() - 1)).getPieceInTile() == null) {
@@ -49,7 +49,7 @@ public class Knight extends GamePiece {
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         Point p = this.getPositionInBoard();
         ArrayList<Attack> ALA = new ArrayList<>();
 
@@ -63,6 +63,10 @@ public class Knight extends GamePiece {
         p1 = new Point(p.getLine()-1,p.getCol()+2);if(this.getGameBoard().getTile(p1) != null && this.getGameBoard().getTile(p1).getPieceInTile() != null && this.getGameBoard().getTile(p1).getPieceInTile().getSide() != this.getSide()){ALA.add(new Attack(this,this.getGameBoard().getTile(p1).getPieceInTile()));}
         p1 = new Point(p.getLine()+1,p.getCol()+2);if(this.getGameBoard().getTile(p1) != null && this.getGameBoard().getTile(p1).getPieceInTile() != null && this.getGameBoard().getTile(p1).getPieceInTile().getSide() != this.getSide()){ALA.add(new Attack(this,this.getGameBoard().getTile(p1).getPieceInTile()));}
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        return null;
     }
 
     @Override

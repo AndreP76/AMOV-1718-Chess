@@ -1,7 +1,9 @@
-package com.amov.lidia.andre.androidchess;
+package com.amov.lidia.andre.androidchess.CustomActivities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.amov.lidia.andre.androidchess.R;
 
 public class LoadActivity extends AppCompatActivity {
 

@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.amov.lidia.andre.androidchess.VerHistoricoJogoActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.amov.lidia.andre.androidchess.CustomActivities.VerHistoricoJogoActivity">
 
     <TextView
         android:id="@+id/tvVerHistorico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="@string/placeholder"
-        android:textSize="30sp"
-        android:padding="10dp"/>
+        android:textSize="30sp" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

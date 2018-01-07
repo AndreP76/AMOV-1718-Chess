@@ -28,4 +28,11 @@
     <string name="game_mode_changed">Modo de jogo mudou para</string>
     <string name="game_start">Início de jogo</string>
     <string name="game_end">Fim de jogo -  Vencedor</string>
+    <string name="takePictureText">Take Picture</string>
+    <string name="resetPictureText">Retake Picture</string>
+    <string name="registerPlayerNext">Next</string>
+    <string name="registerPlayerNameText">Name:</string>
+    <string name="player">Player</string>
+    <string name="loadMenuIcon">Load Profile</string>
+    <string name="cancelProfileLoad">Cancel</string>
 </resources>

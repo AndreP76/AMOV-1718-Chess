@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.amov.lidia.andre.androidchess.HistoricoActivity">
+    tools:context="com.amov.lidia.andre.androidchess.CustomActivities.HistoricoActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="@string/historico"
-        android:textSize="30sp"
-        android:padding="10dp"/>
+        android:textSize="30sp" />
 
     <FrameLayout
         android:layout_width="match_parent"

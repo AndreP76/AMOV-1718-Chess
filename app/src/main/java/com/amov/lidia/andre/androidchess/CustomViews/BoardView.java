@@ -1,4 +1,4 @@
-package com.amov.lidia.andre.androidchess;
+package com.amov.lidia.andre.androidchess.CustomViews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
 import com.amov.lidia.andre.androidchess.ChessCore.OnPieceMoveListenerInterface;
@@ -15,6 +16,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
     private Paint greenPaint;
     private int borderVerticalTextOffset;
     private int borderHorizontalTextOffset;
+    private int boardStartX;
+    private int boardStartY;
 
     private int currentIndex = -1;
 
@@ -117,14 +121,14 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(0, 0, boardWidth, boardHeight, currentGame.getCurrentPlayerSide() == WHITE_SIDE ? blackPaint : whitePaint);
-        int textXLeft = borderHorizontalTextOffset;
-        int textXRight = this.boardWidth - borderThicknessSides + borderHorizontalTextOffset;
-        int textY = borderThicknessTops - borderVerticalTextOffset;
-        int textYBottom = boardHeight - borderVerticalTextOffset;
+        canvas.drawRect(boardStartX, boardStartY, boardStartX + boardWidth, boardStartY + boardHeight, currentGame.getCurrentPlayerSide() == WHITE_SIDE ? blackPaint : whitePaint);
+        int textXLeft = boardStartX + borderHorizontalTextOffset;
+        int textXRight = boardStartX + this.boardWidth - borderThicknessSides + borderHorizontalTextOffset;
+        int textY = boardStartY + borderThicknessTops - borderVerticalTextOffset;
+        int textYBottom = boardStartY + boardHeight - borderVerticalTextOffset;
         for (int i = 0; i < 8; ++i) {
-            int textX = borderThicknessSides - textHorizontalOffset + (widthPerCol / 2) + ((widthPerCol) * (i));
-            int textYSides = borderThicknessTops - textVerticalOffset + (heightPerLine / 2) + ((heightPerLine) * (i));
+            int textX = boardStartX + borderThicknessSides - textHorizontalOffset + (widthPerCol / 2) + ((widthPerCol) * (i));
+            int textYSides = boardStartY + borderThicknessTops - textVerticalOffset + (heightPerLine / 2) + ((heightPerLine) * (i));
             textPaint.setColor(currentGame.getCurrentPlayerSide() == WHITE_SIDE ? ContextCompat.getColor(ctx, R.color.colorWhite) : ContextCompat.getColor(ctx, R.color.colorBlack));
             canvas.drawText((char) ('A' + i) + "", textX, textY, textPaint);
             canvas.drawText((char) ('A' + i) + "", textX, textYBottom, textPaint);
@@ -136,8 +140,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
         ArrayList<Move> Movements = null;
         ArrayList<Attack> Attacks = null;
         if (gp != null) {
-            Movements = gp.getPossibleMoves();
-            Attacks = gp.getPossibleAttacks();
+            Movements = gp.getMoves();
+            Attacks = gp.getAttacks();
         }
 
         for (int i = 0; i < 8; ++i) {
@@ -157,8 +161,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
                     p = DefaultResolvePaint(i, j);
                 }
 
-                int startX = j * widthPerCol + borderThicknessSides;
-                int startY = i * heightPerLine + borderThicknessTops;
+                int startX = j * widthPerCol + borderThicknessSides + boardStartX;
+                int startY = i * heightPerLine + borderThicknessTops + boardStartY;
                 canvas.drawRect(startX, startY, startX + widthPerCol, startY + heightPerLine, p);
             }
         }
@@ -167,8 +171,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
         ArrayList<GamePiece> AllPieces = G.getAllPieces();
         for (int i = 0; i < AllPieces.size(); ++i) {
             GamePiece p = AllPieces.get(i);
-            int startX = (p.getPositionInBoard().getCol()) * widthPerCol + borderThicknessSides + textHorizontalOffset;
-            int startY = (p.getPositionInBoard().getLine() + 1) * heightPerLine + borderThicknessTops + textVerticalOffset;
+            int startX = boardStartX + (p.getPositionInBoard().getCol()) * widthPerCol + borderThicknessSides + textHorizontalOffset;
+            int startY = boardStartY + (p.getPositionInBoard().getLine() + 1) * heightPerLine + borderThicknessTops + textVerticalOffset;
             canvas.drawText(p.getUnicodeLetter(), startX, startY, p.getSide() == WHITE_SIDE ? whiteSidePaint : blackSidePaint);
         }
 
@@ -195,6 +199,9 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.boardWidth = this.boardHeight = Math.min(w, h);//força o campo a ser quadrado ao assumir o menor espaço possivel como o tamanho de cada lado do campo
+
+        boardStartX = (w - this.boardWidth) / 2;
+        boardStartY = (h - this.boardHeight) / 2;
 
         borderThicknessSides = (int) (this.boardWidth * 0.05);
         borderThicknessTops = (int) (this.boardHeight * 0.05);
@@ -227,13 +234,13 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
             return true;//Not a valid line
 
         if (Chess.getCurrentSelectedPiece() != null) {//selecting a destination
-            Move m = Game.PointCanBeMovedTo(Chess.getCurrentSelectedPiece().getPossibleMoves(), new Point(LineIndex, ColIndex));
+            Move m = Game.PointCanBeMovedTo(Chess.getCurrentSelectedPiece().getMoves(), new Point(LineIndex, ColIndex));
             if (m != null) {//this is a valid move
                 Chess.getCurrentGame().executeMove(m);
                 invalidate();
                 return true;
             } else {//this may be an attack
-                Attack a = Game.PointIsAttacked(Chess.getCurrentSelectedPiece().getPossibleAttacks(), new Point(LineIndex, ColIndex));
+                Attack a = Game.PointIsAttacked(Chess.getCurrentSelectedPiece().getAttacks(), new Point(LineIndex, ColIndex));
                 if (a != null) {//this in an attack
                     Chess.getCurrentGame().executeMove(a);
                     invalidate();
@@ -273,18 +280,7 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
             }
             return true;//clicked an invalid place
         }
-    }/*/
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            currentIndex = (currentIndex + 1) % 32;
-            Chess.setCurrentSelectedPiece(Chess.getCurrentGame().getAllPieces().get(currentIndex));
-            Log.d("[BOARDVIEW] :: ","Selected piece : " + Chess.getCurrentSelectedPiece() + "\t" + Chess.getCurrentSelectedPiece().getName()+ Chess.getCurrentSelectedPiece().getPositionInBoard().toString());
-            invalidate();
-            return true;
-        }else return super.onTouchEvent(event);
-    }//*/
+    }
 
     private int IntervalInterpolate(int pos, int intervalLength, int intervals) {
         int widthPerInterval = intervalLength / intervals;
@@ -306,6 +302,10 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
             } else {
                 Log.v("[GAME] ::", "Black side has won!");
                 blackSideWon = true;
+            }
+        } else {//game not ended
+            if (currentGame.getCurrentPlayer().isAI()) {
+                currentGame.executeAIMove(currentGame.getCurrentPlayer().getSide());
             }
         }
     }

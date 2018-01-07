@@ -1,12 +1,14 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
 import java.util.ArrayList;
-
-import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 
 public class Queen extends GamePiece {
     public Queen(Board B, Point Position, short Side) throws AlreadyFilledException {
@@ -18,7 +20,7 @@ public class Queen extends GamePiece {
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         for (int i = 0; i < 9; ++i) {
             Direction d = DirectionUtils.IndexToDir(i);
@@ -33,7 +35,7 @@ public class Queen extends GamePiece {
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
         for(int i = 0; i < 9;++i){
             Direction d = DirectionUtils.IndexToDir(i);
@@ -46,6 +48,10 @@ public class Queen extends GamePiece {
             }
         }
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        return null;
     }
 
     @Override

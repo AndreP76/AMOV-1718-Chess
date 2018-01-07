@@ -1,4 +1,4 @@
-package com.amov.lidia.andre.androidchess;
+package com.amov.lidia.andre.androidchess.CustomActivities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.amov.lidia.andre.androidchess.Chess;
+import com.amov.lidia.andre.androidchess.Historico;
+import com.amov.lidia.andre.androidchess.R;
+
 import java.util.ArrayList;
 
 public class HistoricoActivity extends Activity {
@@ -22,7 +26,7 @@ public class HistoricoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
 
-        lvHistorico = (ListView) findViewById(R.id.lvHistorico);
+        lvHistorico = findViewById(R.id.lvHistorico);
         HistAdapter adapter = new HistAdapter(Chess.getHistoricos());
         lvHistorico.setAdapter(adapter);
         lvHistorico.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,7 +71,7 @@ public class HistoricoActivity extends Activity {
 
             //Código para fazer o botão remover um jogo do histórico
             //TODO - Confirmar que não dá asneira!!!
-            Button removeButton = (Button)layout.findViewById(R.id.list_delete);
+            Button removeButton = layout.findViewById(R.id.list_delete);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

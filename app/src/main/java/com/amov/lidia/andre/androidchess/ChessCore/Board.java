@@ -52,48 +52,6 @@ public class Board {
         else throw new AlreadyFilledException();
     }
 
-    /**
-     * Creates a string with ANSI escape codes so we can see the tiles
-     * this is for debugging mainly
-     * @return String
-     */
-//    public void toTerminalString() {
-//        String AnsiStart = "@|";
-//        String AnsiEnd = "|@";
-//
-//
-//        AnsiConsole.out.print("  ");
-//        for(int i = 0; i < BoardCols;++i){
-//            AnsiConsole.out.print((char) ('A' + i));
-//        }
-//        for (int i = 0;i < BoardLines;++i){
-//            AnsiConsole.out.println();
-//            AnsiConsole.out.print(i + " ");
-//            for (int j = 0; j < BoardCols;++j){
-//                if(Tiles[i][j].getTileColor() == ChessTile.BLACK_TILE){
-//                    if(Tiles[i][j].getPieceInTile() != null && Tiles[i][j].getPieceInTile().getSide() == Game.BLACK_SIDE) {
-//                        AnsiConsole.out.print(ansi().bgYellow().fg(Ansi.Color.BLACK).a(Tiles[i][j].getPieceInTile().getLetter()));
-//                    }else if(Tiles[i][j].getPieceInTile() != null){
-//                        AnsiConsole.out.print(ansi().bgYellow().fg(Ansi.Color.WHITE).a(Tiles[i][j].getPieceInTile().getLetter()));
-//                    }else{
-//                        AnsiConsole.out.print(ansi().bgYellow().a(" "));
-//                    }
-//                }else{
-//                    if(Tiles[i][j].getPieceInTile() != null && Tiles[i][j].getPieceInTile().getSide() == Game.BLACK_SIDE) {
-//                        AnsiConsole.out.print(ansi().bgBrightYellow().fg(Ansi.Color.BLACK).a(Tiles[i][j].getPieceInTile().getLetter()));
-//                    }else if(Tiles[i][j].getPieceInTile() != null) {
-//                        AnsiConsole.out.print(ansi().bgBrightYellow().fg(Ansi.Color.WHITE).a(Tiles[i][j].getPieceInTile().getLetter()));
-//                    }else{
-//                        AnsiConsole.out.print(ansi().bgBrightYellow().a(" "));
-//                    }
-//                }
-//            }
-//            AnsiConsole.out.print(ansi().bgDefault().fgDefault().a(""));
-//        }
-//        AnsiConsole.out.println();
-//        AnsiConsole.out.flush();
-//    }
-
     public ChessTile getTile(Point position) {
         try {
             return Tiles[position.getLine()][position.getCol()];
@@ -112,8 +70,8 @@ public class Board {
 //        ArrayList<Attack> AvailableAttacks;
 //        ArrayList<Move> AvailableMoves;
 //        if(originC != null && getTile(originC).getPieceInTile() != null) {
-//            AvailableMoves = Tiles[originC.getLine()][originC.getCol()].getPieceInTile().getPossibleMoves();
-//            AvailableAttacks = Tiles[originC.getLine()][originC.getCol()].getPieceInTile().getPossibleAttacks();
+//            AvailableMoves = Tiles[originC.getLine()][originC.getCol()].getPieceInTile().getMoves();
+//            AvailableAttacks = Tiles[originC.getLine()][originC.getCol()].getPieceInTile().getAttacks();
 //        }else{
 //            AvailableAttacks = null;
 //            AvailableMoves = null;
@@ -190,10 +148,10 @@ public class Board {
         ArrayList<Attack> OtherSideAttacks = new ArrayList<>();
         for(GamePiece gp : AllPieces){
             if (gp.getSide() == side) {
-                OtherSideAttacks.addAll(gp.getPossibleAttacks());
+                OtherSideAttacks.addAll(gp.getAttacks());
             }
         }
-        return Game.PointIsAttacked(OtherSideAttacks, positionInBoard) == null;
+        return Game.PointIsAttacked(OtherSideAttacks, positionInBoard) != null;
     }
 
     public boolean canKingEscape(short Side) {
@@ -205,7 +163,7 @@ public class Board {
         }
 
         if(k != null){
-            ArrayList<Move> KingPossibleMoves = k.getPossibleMoves();
+            ArrayList<Move> KingPossibleMoves = k.getMoves();
             for (Move m:
                  KingPossibleMoves) {
                 if (!TileIsAttackedBySide(m.getDestination(), k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE))

@@ -24,7 +24,7 @@ public class King extends GamePiece {
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         Point p = this.getPositionInBoard();
 
@@ -41,7 +41,7 @@ public class King extends GamePiece {
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
         Point p = this.getPositionInBoard();
 
@@ -55,6 +55,10 @@ public class King extends GamePiece {
         }
 
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        return null;
     }
 
     @Override

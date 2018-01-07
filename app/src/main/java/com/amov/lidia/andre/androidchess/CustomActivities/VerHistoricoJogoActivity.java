@@ -1,4 +1,4 @@
-package com.amov.lidia.andre.androidchess;
+package com.amov.lidia.andre.androidchess.CustomActivities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.amov.lidia.andre.androidchess.Historico;
+import com.amov.lidia.andre.androidchess.Jogada;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,10 +29,10 @@ public class VerHistoricoJogoActivity extends Activity {
         List<Jogada> jogadas;
 
         if (hist != null) {
-            tvVerHistorico = (TextView) findViewById(R.id.tvVerHistorico);
+            tvVerHistorico = findViewById(R.id.tvVerHistorico);
             tvVerHistorico.setText(hist.getTitle());
             jogadas = hist.getJogadas();
-            lvJogadas = (ListView) findViewById(R.id.lvListaJogadas);
+            lvJogadas = findViewById(R.id.lvListaJogadas);
             JogadasAdapter jogAdapter = new JogadasAdapter(jogadas);
             lvJogadas.setAdapter(jogAdapter);
         }

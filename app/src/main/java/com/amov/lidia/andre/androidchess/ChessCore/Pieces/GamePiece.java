@@ -30,8 +30,11 @@ public abstract class GamePiece {
     }
 
     /*GAME METHODS*/
-    public abstract ArrayList<Move> getPossibleMoves();
-    public abstract ArrayList<Attack> getPossibleAttacks();
+    public abstract ArrayList<Move> getMoves();
+
+    public abstract ArrayList<Attack> getAttacks();
+
+    //public abstract ArrayList<Point> getPossibleAttacks();
     public boolean Move(Point newPos){ return this.setPositionInBoard(newPos); }
     public void Move(int newX, int newY){ this.setPositionInBoard(new Point(newX,newY)); }
     public abstract String getLetter();

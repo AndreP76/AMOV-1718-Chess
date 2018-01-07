@@ -27,7 +27,7 @@ public class Pawn extends GamePiece {
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         Point pointInGame = this.getPositionInBoard();
         int dist = 2;
@@ -64,7 +64,7 @@ public class Pawn extends GamePiece {
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
         ChessTile[] PassantTiles = new ChessTile[2];
         ChessTile[] StandardTiles = new ChessTile[2];
@@ -91,6 +91,10 @@ public class Pawn extends GamePiece {
             }
         }
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        return null;
     }
 
     public boolean getFirstMoveUsed() {

@@ -23,7 +23,7 @@ public class Rook extends GamePiece {
     }
 
     @Override
-    public ArrayList<Move> getPossibleMoves() {
+    public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         int LineIncrement = 0;
         int ColIncrement = 0;
@@ -53,7 +53,7 @@ public class Rook extends GamePiece {
     }
 
     @Override
-    public ArrayList<Attack> getPossibleAttacks() {
+    public ArrayList<Attack> getAttacks() {
         ArrayList<Attack> ALA = new ArrayList<>();
         int LineIncrement = 0;
         int ColIncrement = 0;
@@ -81,6 +81,10 @@ public class Rook extends GamePiece {
         }
 
         return ALA;
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        return null;
     }
 
     @Override

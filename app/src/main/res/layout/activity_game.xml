@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.amov.lidia.andre.androidchess.GameActivity">
+    tools:context="com.amov.lidia.andre.androidchess.CustomActivities.GameActivity">
     <LinearLayout
+        android:id="@+id/player1Container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
         <!-- Aqui fica o fragmento do jogador local (1)-->
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/gameFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:id="@+id/gameFragmentContainer">
+        android:layout_weight="4">
         <!--aqui fica a board -->
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/player2Container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
         <!-- Aqui fica o fragmento do jogador local (2)/ Bot / Jogador remoto-->
     </LinearLayout>
 
