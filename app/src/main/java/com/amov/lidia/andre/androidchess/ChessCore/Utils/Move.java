@@ -1,9 +1,11 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Utils;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.*;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.R;
 
 public class Move {
     Point Origin;
@@ -50,9 +52,9 @@ public class Move {
     public String toString() {
         String SideString = "";
         if(Side == Game.BLACK_SIDE)
-            SideString = "Black ";
+            SideString = Chess.resources.getString(R.string.black); //"Black ";
         else if(Side == Game.WHITE_SIDE){
-            SideString = "White ";
+            SideString = Chess.resources.getString(R.string.white); //"White ";
         }
         return SideString + PieceName.toLowerCase() + " from " + Origin.toString() + " to " + Destination.toString();
     }

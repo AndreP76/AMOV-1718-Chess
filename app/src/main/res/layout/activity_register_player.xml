@@ -54,10 +54,10 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="12"
             android:gravity="center"
             android:text="@string/registerPlayerNameText"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/nameBox"
@@ -68,7 +68,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="18"
             android:onClick="acceptPlayerClick"
             android:text="@string/registerPlayerNext" />
 

@@ -1,5 +1,6 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
@@ -9,6 +10,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.util.ArrayList;
 
@@ -35,12 +37,12 @@ public class Pawn extends GamePiece {
         if (this.getSide() == BLACK_SIDE) {//Black side goes north and only north
             for(int i = pointInGame.getLine()-1; i > pointInGame.getLine()-dist;--i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
-                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
+                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),Chess.resources.getString(R.string.pawn)/*"Pawn"*/,this.getLetter(),this.getSide()));
             }
         } else if (this.getSide() == Game.WHITE_SIDE) {//White side goes south
             for(int i = pointInGame.getLine()+1; i < pointInGame.getLine()+dist;++i){
                 if(this.getGameBoard().getTile(new Point(i,pointInGame.getCol())).getPieceInTile() != null) break;
-                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()),"Pawn",this.getLetter(),this.getSide()));
+                else ALM.add(new Move(this,new Point(i,pointInGame.getCol()), Chess.resources.getString(R.string.pawn)/*"Pawn"*/,this.getLetter(),this.getSide()));
             }
         }
         return ALM;
@@ -117,6 +119,6 @@ public class Pawn extends GamePiece {
 
     @Override
     public String getName() {
-        return "Pawn";
+        return Chess.resources.getString(R.string.pawn); //"Pawn";
     }
 }

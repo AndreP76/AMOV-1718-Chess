@@ -1,5 +1,6 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
@@ -7,6 +8,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Direction;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.util.ArrayList;
 
@@ -69,6 +71,6 @@ public class Queen extends GamePiece {
 
     @Override
     public String getName() {
-        return "Queen";
+        return Chess.resources.getString(R.string.queen); //"Queen";
     }
 }

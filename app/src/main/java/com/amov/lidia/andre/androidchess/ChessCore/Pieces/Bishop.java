@@ -1,5 +1,6 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
@@ -7,6 +8,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.DirectionUtils;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.util.ArrayList;
 
@@ -98,6 +100,6 @@ public class Bishop extends GamePiece {
 
     @Override
     public String getName() {
-        return "Bishop";
+        return Chess.resources.getString(R.string.bishop); //"Bishop";
     }
 }

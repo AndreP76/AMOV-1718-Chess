@@ -178,7 +178,7 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
 
         if (whiteSideWon || blackSideWon) {
             canvas.drawRect(0, boardHeight * 0.25f, boardWidth, boardHeight * 0.75f, whiteSideWon ? blackSidePaint : whiteSidePaint);
-            canvas.drawText(whiteSideWon ? "White side victory!" : "Black side victory!", 0, boardHeight * 0.5f, whiteSideWon ? whiteSidePaint : blackSidePaint);
+            canvas.drawText(whiteSideWon ? Chess.resources.getString(R.string.white_victory) : Chess.resources.getString(R.string.black_victory), 0, boardHeight * 0.5f, whiteSideWon ? whiteSidePaint : blackSidePaint);
         }
     }
 

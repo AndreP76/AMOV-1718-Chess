@@ -1,6 +1,7 @@
 package com.amov.lidia.andre.androidchess;
 
 import android.app.Application;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
@@ -26,6 +27,9 @@ import java.util.ArrayList;
 public class Chess extends Application {
     public static final String FILE_NAME = "history.dat";
     public static final String APP_TAG = "AMovChessGame: ";
+
+    public static Resources resources; //para facilitar acesso às strings fora de um context
+
     private static Game currentGame = null;
     private static GamePiece currentSelectedPiece = null;
     private static ArrayList<Historico> historicos;
@@ -104,6 +108,7 @@ public class Chess extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        resources = getResources();
         lerHistoricos();
     }
 }
