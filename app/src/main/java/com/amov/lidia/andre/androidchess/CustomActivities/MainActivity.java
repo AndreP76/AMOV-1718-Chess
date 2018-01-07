@@ -27,8 +27,8 @@ public class MainActivity extends Activity {
     }
 
     public void singlePlayerStart(View view) {
-        SinglePlayerStartDialog spsd= new SinglePlayerStartDialog();
-        spsd.show(getFragmentManager(),"spsd");
+        SinglePlayerStartDialog spsd = new SinglePlayerStartDialog();
+        spsd.show(getFragmentManager(), "spsd");
     }
 
     public void multiPlayerStart(View view) {
@@ -49,4 +49,10 @@ public class MainActivity extends Activity {
     public void eraseProfiles(View view) {
         ProfileManager.DestroyProfilesAndPictures(this);
     }
+
+    public void onHistoricoClick(View view) {
+        Intent toHistoricoActivity = new Intent(this, HistoricoActivity.class);
+        startActivity(toHistoricoActivity);
+    }
+
 }

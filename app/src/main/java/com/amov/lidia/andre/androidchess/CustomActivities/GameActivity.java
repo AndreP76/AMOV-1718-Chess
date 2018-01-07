@@ -33,13 +33,13 @@ public class GameActivity extends Activity {
                 GameMode gameMode = GameMode.SinglePlayer;
                 Player player1 = (Player) b.getSerializable("Player1");
                 Player player2 = new Player(player1.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE);
-                Game g = new Game(player1, player2, gameMode);
+                Game g = new Game(player1, player2, gameMode, this);
                 Chess.setCurrentGame(g);
             }
         } else if (PlayerMode != null && PlayerMode.toLowerCase().equals("local")) {
             Player pl1 = (Player) b.getSerializable("Player1");
             Player pl2 = (Player) b.getSerializable("Player2");
-            Chess.setCurrentGame(new Game(pl1, pl2, GameMode.LocalMultiplayer));
+            Chess.setCurrentGame(new Game(pl1, pl2, GameMode.LocalMultiplayer, this));
         }
 
         Fragment gf = GameFragment.newInstance(b);

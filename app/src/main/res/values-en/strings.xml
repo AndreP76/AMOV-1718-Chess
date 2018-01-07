@@ -25,11 +25,12 @@
     <string name="queen">Queen</string>
     <string name="rook">Rook</string>
     <string name="white">white</string>
-    <string name="game_end">Game ended - Winner</string>
+    <string name="game_end">Game ended - Winner:</string>
     <string name="game_mode_changed">Game mode changed to</string>
     <string name="game_start">Game started</string>
     <string name="piece_attack">attacked</string>
-    <string name="piece_moved">moved to</string>
+    <string name="moved_from">moved from</string>
+    <string name="moved_to">to</string>
     <string name="takePictureText">Take Picture</string>
     <string name="resetPictureText">Retake Picture</string>
     <string name="registerPlayerNext">Next</string>

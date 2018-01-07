@@ -3,6 +3,7 @@ package com.amov.lidia.andre.androidchess.CustomActivities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,6 +51,7 @@ public class HistoricoActivity extends Activity {
 
         @Override
         public int getCount() {
+//            return historico == null? 0 : historico.size();
             return historico.size();
         }
 

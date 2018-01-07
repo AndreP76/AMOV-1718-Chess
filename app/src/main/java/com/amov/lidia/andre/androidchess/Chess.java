@@ -71,9 +71,9 @@ public class Chess extends Application {
             oos.writeObject(historicos);
             fos.close();
         } catch (FileNotFoundException e) {
-            Log.e(APP_TAG, "Ficheiro não encontrado (escrita).", e);
+            Log.e(APP_TAG, "Ficheiro não encontrado (escrita): " + e.getMessage());
         } catch (IOException e) {
-            Log.e(APP_TAG, "Erro ao gravar histórico.", e);
+            Log.e(APP_TAG, "Erro ao gravar histórico: " + e.getMessage());
         }
     }
 
@@ -86,11 +86,11 @@ public class Chess extends Application {
             historicos = hist;
             fis.close();
         } catch (FileNotFoundException e) {
-            Log.e(APP_TAG, "Ficheiro não encontrado para leitura.", e);
+            Log.e(APP_TAG, "Ficheiro não encontrado para leitura: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.e(APP_TAG, "Erro ao ler histórico (readObject).", e);
+            Log.e(APP_TAG, "Erro ao ler histórico (readObject): " + e.getMessage());
         } catch (IOException e) {
-            Log.e(APP_TAG, "Erro ao ler histórico.", e);
+            Log.e(APP_TAG, "Erro ao ler histórico: " + e.getMessage());
         }
 
         if (historicos == null)

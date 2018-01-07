@@ -24,10 +24,11 @@
     <string name="black">preto</string>
     <string name="white">branco</string>
     <string name="piece_attack">atacou</string>
-    <string name="piece_moved">moveu-se para</string>
+    <string name="moved_from">moveu-se de</string>
+    <string name="moved_to">para</string>
     <string name="game_mode_changed">Modo de jogo mudou para</string>
     <string name="game_start">Início de jogo</string>
-    <string name="game_end">Fim de jogo -  Vencedor</string>
+    <string name="game_end">Fim de jogo -  Vencedor:</string>
     <string name="takePictureText">Take Picture</string>
     <string name="resetPictureText">Retake Picture</string>
     <string name="registerPlayerNext">Next</string>

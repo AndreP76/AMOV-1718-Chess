@@ -84,6 +84,12 @@
             android:layout_weight="1"
             android:onClick="eraseProfiles"
             android:text="DEBUG PLZ REMOVE" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="onHistoricoClick"
+            android:text="@string/historico" />
 
     </LinearLayout>
 </LinearLayout>

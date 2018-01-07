@@ -18,11 +18,11 @@ import java.util.List;
  * modos de jogo e sucessão de jogadas realizadas.
  */
 
-//TODO - chamar construtor de Historico no início de cada jogo
+//DONE - chamar construtor de Historico no início de cada jogo
 //TODO - criar novo objeto Jogada e adicionar à lista sempre que é efetuado um movimento
 // ou se muda de modo de jogo
-//TODO - chamar setDate, setVencedor e setTitle quando o jogo termina
-//TODO - gravar histórico sempre que um jogo termina
+//DONE - chamar setDate, setVencedor e setTitle quando o jogo termina
+//DONE - gravar histórico sempre que um jogo termina
 public class Historico implements Serializable {
     private ArrayList<Jogada> jogadas;
     private Date date;

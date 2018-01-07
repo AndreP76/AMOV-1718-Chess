@@ -1,7 +1,9 @@
 package com.amov.lidia.andre.androidchess.ChessCore;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.NoKingException;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.Bishop;
@@ -15,6 +17,8 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.GameMode;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
+import com.amov.lidia.andre.androidchess.Historico;
+import com.amov.lidia.andre.androidchess.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,9 +41,12 @@ public class Game extends Observable implements Serializable {
     private Player BlackPlayer;
     private GamePiece currentSelectedPiece;
 
+    private Context context;
+    private Historico itemHistorico;
+
     private ArrayList<OnPieceMoveListenerInterface> onPieceMoveListener;
 
-    public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm) {
+    public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm, Context context) {
         Log.d("[GAME CONSTRUCTOR] :: ", "New game created!");
         this.gameMode = gm;
         this.WhitePlayer = WhitePlayer == null ? new Player(WHITE_SIDE) : WhitePlayer;
@@ -103,9 +110,67 @@ public class Game extends Observable implements Serializable {
             WhitePlayer.addPieces(SidesPieces[WHITE_SIDE]);
             assert BlackPlayer != null;
             BlackPlayer.addPieces(SidesPieces[BLACK_SIDE]);
+
+            this.context = context;
+
+            itemHistorico = new Historico();
+            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                    translateGameMode(gameMode),
+                    context.getResources().getString(R.string.game_start));
+
         } catch (AlreadyFilledException e) {
             e.printStackTrace();
         }
+    }
+
+    private String translateGameMode(GameMode gm) {
+        String str = "";
+        switch (gm) {
+            case OnlineMultiplayer:
+                str = context.getResources().getString(R.string.OnlineString);
+                break;
+            case LocalMultiplayer:
+                str = context.getResources().getString(R.string.MultiPlayerString);
+                break;
+            case SinglePlayer:
+                str = context.getResources().getString(R.string.SinglePlayerString);
+                break;
+            default:
+                break;
+        }
+        return str;
+    }
+
+    private String translateSide(short side) {
+        return side == WHITE_SIDE ?
+                context.getResources().getString(R.string.white) :
+                context.getResources().getString(R.string.black);
+    }
+
+    private String getMoveDescription(Move m) {
+        String str = m.getPiece().getName() + " " + translateSide(m.getPiece().getSide()) + " ";
+        if (m instanceof Attack) {
+            Attack a = (Attack) m;
+            str += context.getResources().getString(R.string.piece_attack) + " " +
+                    a.getAttackedPiece().getName() + " " +
+                    translateSide(a.getAttackedPiece().getSide());
+        } else {
+            str += context.getString(R.string.moved_from) + " " + m.getOrigin().getColString() +
+                    m.getOrigin().getLine() + " " +
+                    context.getResources().getString(R.string.moved_to) + " " +
+                    m.getDestination().getColString() + m.getDestination().getLine();
+        }
+        return str;
+    }
+
+    private void addGameEndItemToHistory(String winner) {
+        itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                translateGameMode(gameMode),
+                context.getResources().getString(R.string.game_end) + " " + winner);
+        itemHistorico.setDate();
+        itemHistorico.setTitle();
+        itemHistorico.setVencedor(winner);
+        Chess.addHistorico(itemHistorico);
     }
 
     public static Move PointCanBeMovedTo(ArrayList<Move> M, Point destinationPoint) {
@@ -149,11 +214,21 @@ public class Game extends Observable implements Serializable {
     /**
      * @return -1 if the game is still running, or the winning side if the game ends
      */
-    public int CheckGameEnd() throws NoKingException{
+    public int CheckGameEnd() throws NoKingException {
         if (GameBoard.isKingInDanger(WHITE_SIDE)) {//if the white king is in danger
-            return GameBoard.canKingEscape(WHITE_SIDE) ? -1 : BLACK_SIDE;
+            if (!GameBoard.canKingEscape(WHITE_SIDE)) {
+                addGameEndItemToHistory(BlackPlayer.getName());
+                return BLACK_SIDE;
+            }
+//            return GameBoard.canKingEscape(WHITE_SIDE) ? -1 : BLACK_SIDE;
+            return -1;
         } else if (GameBoard.isKingInDanger(BLACK_SIDE)) {
-            return GameBoard.canKingEscape(BLACK_SIDE) ? -1 : WHITE_SIDE;
+            if (!GameBoard.canKingEscape(BLACK_SIDE)) {
+                addGameEndItemToHistory(WhitePlayer.getName());
+                return WHITE_SIDE;
+            }
+//            return GameBoard.canKingEscape(BLACK_SIDE) ? -1 : WHITE_SIDE;
+            return -1;
         } else return -1;
     }
 
@@ -161,11 +236,13 @@ public class Game extends Observable implements Serializable {
         return GameBoard.AllPieces;
     }
 
-    public boolean executeMove(Move m){
+    public boolean executeMove(Move m) {
         if (m instanceof Attack) return executeMove((Attack) m);
-        if(m.isValidMove()) {
+        if (m.isValidMove()) {
             moveCommons();
             m.getPiece().Move(m.getDestination());
+            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                    translateGameMode(gameMode), getMoveDescription(m));
             if (onPieceMoveListener != null) {
                 notifyMoveObservers();
             }
@@ -179,11 +256,13 @@ public class Game extends Observable implements Serializable {
         setCurrentSelectedPiece(null);
     }
 
-    public boolean executeMove(Attack a){
-        if(a.isValidMove()){
+    public boolean executeMove(Attack a) {
+        if (a.isValidMove()) {
             moveCommons();
             a.getPiece().Move(a.getDestination());
             destroyPiece(a.getAttackedPiece());
+            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                    translateGameMode(gameMode), getMoveDescription(a));
             notifyMoveObservers();
             return true;
         }
@@ -191,8 +270,13 @@ public class Game extends Observable implements Serializable {
     }
 
     private void destroyPiece(GamePiece attackedPiece) {
-        if(attackedPiece.getSide() == BLACK_SIDE){SidesPieces[BLACK_SIDE].remove(attackedPiece);BlackPlayer.removePiece(attackedPiece);}
-        else if(attackedPiece.getSide() == WHITE_SIDE) {SidesPieces[WHITE_SIDE].remove(attackedPiece);WhitePlayer.removePiece(attackedPiece);}
+        if (attackedPiece.getSide() == BLACK_SIDE) {
+            SidesPieces[BLACK_SIDE].remove(attackedPiece);
+            BlackPlayer.removePiece(attackedPiece);
+        } else if (attackedPiece.getSide() == WHITE_SIDE) {
+            SidesPieces[WHITE_SIDE].remove(attackedPiece);
+            WhitePlayer.removePiece(attackedPiece);
+        }
 
         GameBoard.AllPieces.remove(attackedPiece);
     }
