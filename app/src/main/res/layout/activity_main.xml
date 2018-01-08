@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#56636c"
     android:gravity="center"
-    tools:context="com.amov.lidia.andre.androidchess.CustomActivities.MainActivity"
-    android:background="#56636c">
+    tools:context="com.amov.lidia.andre.androidchess.CustomActivities.MainActivity">
 
     <LinearLayout
         android:layout_width="368dp"
@@ -25,9 +25,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
+                android:padding="15dp"
                 android:text="@string/app_name"
                 android:textColor="#ffffff"
-                android:padding="15dp"
                 android:textSize="30sp"
                 android:textStyle="bold"/>
 
@@ -75,19 +75,25 @@
             android:onClick="singlePlayerStart"
             android:text="@string/SinglePlayerString" />
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="multiPlayerStart"
             android:text="@string/MultiPlayerString" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="onlineStart"
             android:text="@string/OnlineString" />
+        </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
@@ -95,12 +101,20 @@
             android:layout_weight="1"
             android:onClick="eraseProfiles"
             android:text="DEBUG PLZ REMOVE" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:onClick="onHistoricoClick"
             android:text="@string/historico" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="onCreditosClick"
+            android:text="@string/creditos" />
 
     </LinearLayout>
 </LinearLayout>

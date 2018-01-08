@@ -6,13 +6,13 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.front" />
 
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-feature android:name="android.hardware.screen.portrait" /> <!-- A aplicação só usa a orientação portrait -->
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
+    <!-- A aplicação só usa a orientação portrait -->
     <application
         android:name=".Chess"
         android:allowBackup="true"
@@ -21,18 +21,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CustomActivities.MainActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".CustomActivities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomActivities.GameActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CustomActivities.LoadActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".CustomActivities.HistoricoActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".CustomActivities.VerHistoricoJogoActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".CustomActivities.RegisterPlayer" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".CustomActivities.GameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomActivities.LoadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomActivities.HistoricoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomActivities.VerHistoricoJogoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CustomActivities.RegisterPlayer"
+            android:screenOrientation="portrait" />
+        <activity android:name=".CustomActivities.CreditsActivity"></activity>
     </application>
 
 </manifest>

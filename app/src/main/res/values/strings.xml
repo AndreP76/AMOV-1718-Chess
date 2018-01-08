@@ -41,4 +41,5 @@
     <string name="black_victory">Lado preto ganhou!</string>
     <string name="queen_char">\u265B</string>
     <string name="king_char">\u265A</string>
+    <string name="creditos">Creditos</string>
 </resources>

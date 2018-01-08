@@ -55,4 +55,7 @@ public class MainActivity extends Activity {
         startActivity(toHistoricoActivity);
     }
 
+    public void onCreditosClick(View view) {
+        startActivity(new Intent(this, CreditsActivity.class));
+    }
 }
