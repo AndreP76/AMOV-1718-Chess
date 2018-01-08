@@ -31,6 +31,9 @@
     <string name="piece_attack">attacked</string>
     <string name="moved_from">moved from</string>
     <string name="moved_to">to</string>
+    <string name="white_victory">White side victory!</string>
+    <string name="black_victory">Black side victory!</string>
+
     <string name="takePictureText">Take Picture</string>
     <string name="resetPictureText">Retake Picture</string>
     <string name="registerPlayerNext">Next</string>
@@ -39,9 +42,15 @@
     <string name="loadMenuIcon">Load Profile</string>
     <string name="cancelProfileLoad">Cancel</string>
     <string name="errorOpeningCamera">Error opening camera!</string>
-    <string name="white_victory">White side victory!</string>
-    <string name="black_victory">Black side victory!</string>
-    <string name="king_char">\\u265A</string>
-    <string name="queen_char">\\u265B</string>
-    <string name="creditos">Creditos</string>
+
+    <string name="king_char">\u265A</string>
+    <string name="queen_char">\u265B</string>
+
+    <!-- strings para créditos -->
+    <string name="creditos">Credits</string>
+    <string name="amov">Mobile Architectures</string>
+    <string name="andre_pereira">André Pereira, 21230559</string>
+    <string name="lidia_fonseca">Lídia Fonseca, 21250370</string>
+    <string name="docente">Teacher: Álvaro Santos</string>
+    <string name="trabalho_realizado_por">Work done by:</string>
 </resources>

@@ -29,6 +29,9 @@
     <string name="game_mode_changed">Modo de jogo mudou para</string>
     <string name="game_start">Início de jogo</string>
     <string name="game_end">Fim de jogo -  Vencedor:</string>
+    <string name="white_victory">Lado branco ganhou!</string>
+    <string name="black_victory">Lado preto ganhou!</string>
+
     <string name="takePictureText">Tirar Foto</string>
     <string name="resetPictureText">Tirar Nova Foto</string>
     <string name="registerPlayerNext">Seguinte</string>
@@ -37,9 +40,15 @@
     <string name="loadMenuIcon">Carregar Perfil</string>
     <string name="errorOpeningCamera">Erro a abrir a câmara!</string>
     <string name="cancelProfileLoad">Cancelar</string>
-    <string name="white_victory">Lado branco ganhou!</string>
-    <string name="black_victory">Lado preto ganhou!</string>
+
     <string name="queen_char">\u265B</string>
     <string name="king_char">\u265A</string>
-    <string name="creditos">Creditos</string>
+
+    <!-- strings para créditos -->
+    <string name="creditos">Créditos</string>
+    <string name="amov">Arquiteturas Móveis</string>
+    <string name="andre_pereira">André Pereira, 21230559</string>
+    <string name="lidia_fonseca">Lídia Fonseca, 21250370</string>
+    <string name="docente">Docente: Álvaro Santos</string>
+    <string name="trabalho_realizado_por">Trabalho realizado por:</string>
 </resources>

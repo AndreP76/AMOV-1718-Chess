@@ -47,7 +47,7 @@
                         android:gravity="center"
                         android:text="@string/queen_char"
                         android:textColor="@color/colorWhite"
-                        android:textSize="100sp"/>
+                        android:textSize="90sp"/>
 
                 </LinearLayout>
 
@@ -63,7 +63,7 @@
                         android:gravity="center"
                         android:text="@string/king_char"
                         android:textColor="@color/colorBlack"
-                        android:textSize="100sp"/>
+                        android:textSize="90sp"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
