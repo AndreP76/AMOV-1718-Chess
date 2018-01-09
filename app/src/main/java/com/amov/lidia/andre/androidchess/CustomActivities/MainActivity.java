@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
 
     public void eraseProfiles(View view) {
         ProfileManager.DestroyProfilesAndPictures(this);
+        Toast.makeText(this, "Data erased!", Toast.LENGTH_SHORT).show();
     }
 
     public void onHistoricoClick(View view) {

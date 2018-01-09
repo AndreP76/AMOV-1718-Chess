@@ -132,7 +132,7 @@ public class SelectProfileDialog extends Dialog implements View.OnClickListener 
                 @Override
                 public void run() {
                     try {
-                        SV.setBackground(PictureManager.ImageToDrawable(SelectProfileDialog.this.getContext(), PictureManager.ScaleBitmap(PictureManager.ReadImageFromFile(SelectProfileDialog.this.getContext(), p.getPictureFilePath()), SV.getWidth(), SV.getHeight())));
+                        SV.setBackground(PictureManager.ImageToDrawable(SelectProfileDialog.this.getContext(), PictureManager.ReadImageFromFile(SelectProfileDialog.this.getContext(), p.getPictureFilePath())));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }

@@ -29,8 +29,6 @@
     <string name="game_mode_changed">Modo de jogo mudou para</string>
     <string name="game_start">Início de jogo</string>
     <string name="game_end">Fim de jogo -  Vencedor:</string>
-    <string name="white_victory">Lado branco ganhou!</string>
-    <string name="black_victory">Lado preto ganhou!</string>
 
     <string name="takePictureText">Tirar Foto</string>
     <string name="resetPictureText">Tirar Nova Foto</string>
