@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.Historico;
@@ -27,14 +28,16 @@ public class HistoricoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
 
-        lvHistorico = findViewById(R.id.lvHistorico);
+        lvHistorico = (ListView) findViewById(R.id.lvHistorico);
         HistAdapter adapter = new HistAdapter(Chess.getHistoricos());
         lvHistorico.setAdapter(adapter);
         lvHistorico.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(HistoricoActivity.this,VerHistoricoJogoActivity.class);
-                intent.putExtra("historico", Chess.getHistoricos().get(position));
+                Intent intent = new Intent(HistoricoActivity.this, VerHistoricoJogoActivity.class);
+//                intent.putExtra("historico", Chess.getHistoricos().get(position));
+                intent.putExtra("historico", position);
+                Toast.makeText(HistoricoActivity.this, "Item " + position, Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         });
@@ -73,11 +76,13 @@ public class HistoricoActivity extends Activity {
 
             //Código para fazer o botão remover um jogo do histórico
             //TODO - Confirmar que não dá asneira!!!
-            Button removeButton = layout.findViewById(R.id.list_delete);
+            Button removeButton = (Button)layout.findViewById(R.id.list_delete);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Chess.removeHistorico(position);
+//                    Toast.makeText(HistoricoActivity.this, "Botão delete! " + position, Toast.LENGTH_LONG).show();
+                    notifyDataSetChanged();
                 }
             });
             return layout;

@@ -33,6 +33,7 @@
     <string name="moved_to">to</string>
     <string name="white_victory">White side victory!</string>
     <string name="black_victory">Black side victory!</string>
+
     <string name="takePictureText">Take Picture</string>
     <string name="resetPictureText">Retake Picture</string>
     <string name="registerPlayerNext">Next</string>

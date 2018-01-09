@@ -2,12 +2,15 @@ package com.amov.lidia.andre.androidchess.CustomActivities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.Historico;
 import com.amov.lidia.andre.androidchess.Jogada;
 import com.amov.lidia.andre.androidchess.R;
@@ -25,7 +28,13 @@ public class VerHistoricoJogoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_historico_jogo);
 
-        Historico hist = (Historico) getIntent().getSerializableExtra("historico");
+//        Historico hist = (Historico) getIntent().getSerializableExtra("historico");
+        Historico hist = null;
+        int index = (int)getIntent().getIntExtra("historico", -1);
+
+        if(index != -1){
+            hist = Chess.getHistoricos().get(index);
+        }
         List<Jogada> jogadas;
 
         if (hist != null) {

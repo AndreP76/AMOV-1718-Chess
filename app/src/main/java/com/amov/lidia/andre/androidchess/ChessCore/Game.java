@@ -46,7 +46,7 @@ public class Game extends Observable implements Serializable {
 
     private ArrayList<OnPieceMoveListenerInterface> onPieceMoveListener;
 
-    public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm, Context context) {
+    public Game(Player WhitePlayer, Player BlackPlayer, GameMode gm, Historico itemHistorico, Context context) {
         Log.d("[GAME CONSTRUCTOR] :: ", "New game created!");
         this.gameMode = gm;
         this.WhitePlayer = WhitePlayer == null ? new Player(WHITE_SIDE) : WhitePlayer;
@@ -113,8 +113,10 @@ public class Game extends Observable implements Serializable {
 
             this.context = context;
 
-            itemHistorico = new Historico();
-            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+            this.itemHistorico = itemHistorico;
+            itemHistorico.setDate();
+            itemHistorico.setTitle();
+            this.itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
                     translateGameMode(gameMode),
                     context.getResources().getString(R.string.game_start));
 
@@ -197,8 +199,6 @@ public class Game extends Observable implements Serializable {
         itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
                 translateGameMode(gameMode),
                 context.getResources().getString(R.string.game_end) + " " + winner);
-        itemHistorico.setDate();
-        itemHistorico.setTitle();
         itemHistorico.setVencedor(winner);
         Chess.addHistorico(itemHistorico);
     }
