@@ -220,7 +220,6 @@ public class Game extends Observable implements Serializable {
                 addGameEndItemToHistory(BlackPlayer.getName());
                 return BLACK_SIDE;
             }
-//            return GameBoard.canKingEscape(WHITE_SIDE) ? -1 : BLACK_SIDE;
             return -1;
         } else if (GameBoard.isKingInDanger(BLACK_SIDE)) {
             if (!GameBoard.canKingEscape(BLACK_SIDE)) {

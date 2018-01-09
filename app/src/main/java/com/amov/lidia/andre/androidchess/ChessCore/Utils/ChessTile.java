@@ -1,11 +1,11 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Utils;
 
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Pieces.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Board;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 
-public class ChessTile {
+import java.io.Serializable;
+
+public class ChessTile implements Serializable {
     public static final short BLACK_TILE = 1;
     public static final short WHITE_TILE = 0;
 
@@ -39,11 +39,11 @@ public class ChessTile {
         return PieceInTile;
     }
 
-    public Point getCoordinatesInBoard() {
-        return CoordinatesInBoard;
-    }
-
     public void setPieceInTile(GamePiece pieceInTile) {
         this.PieceInTile = pieceInTile;
+    }
+
+    public Point getCoordinatesInBoard() {
+        return CoordinatesInBoard;
     }
 }

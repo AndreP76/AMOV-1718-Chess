@@ -4,10 +4,12 @@ import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 import com.amov.lidia.andre.androidchess.R;
 
+import java.io.Serializable;
+
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
-public class Attack extends Move {
+public class Attack extends Move implements Serializable {
     GamePiece AttackedPiece;
     String AttackedPieceName;
     String AttackedPieceSymbol;

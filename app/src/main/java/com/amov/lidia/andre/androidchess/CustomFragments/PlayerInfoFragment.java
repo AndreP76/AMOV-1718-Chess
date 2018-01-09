@@ -90,10 +90,22 @@ public class PlayerInfoFragment extends Fragment implements OnPieceMoveListenerI
         playerNameTA = view.findViewById(R.id.playerName);
         resignBtn = view.findViewById(R.id.resignButton);
 
+        if (currentPlayer.isAI())
+            resignBtn.setText(R.string.playerEnter);
+        else if (Chess.getCurrentGame().getCurrentPlayerSide() != this.currentPlayer.getSide())
+            resignBtn.setVisibility(View.INVISIBLE);
+
+        resignBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onResignClick(v);
+            }
+        });
+
         playerImageSV.post(new Runnable() {
             @Override
             public void run() {
-                playerImageSV.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(PlayerPicture, playerImageSV.getWidth(), playerImageSV.getHeight(), false)));
+                playerImageSV.setBackground(new BitmapDrawable(getResources(), PlayerPicture));
             }
         });
         playerColorSV.post(new Runnable() {
@@ -143,10 +155,9 @@ public class PlayerInfoFragment extends Fragment implements OnPieceMoveListenerI
     @Override
     public void onMove() {
         if (Chess.getCurrentGame().getCurrentPlayerSide() == this.currentPlayer.getSide() && !this.currentPlayer.isAI()) {
-            resignBtn.setVisibility(View.INVISIBLE);
-        } else if (this.currentPlayer.isAI()) {
             resignBtn.setVisibility(View.VISIBLE);
+        } else if (this.currentPlayer.isAI()) {
             resignBtn.setText(R.string.playerEnter);
-        }
+        } else resignBtn.setVisibility(View.INVISIBLE);
     }
 }

@@ -79,4 +79,6 @@ public abstract class GamePiece implements Serializable {
             return getPositionInBoard().equals(gp.getPositionInBoard()) && gp.getSide() == this.getSide() && this.getName().equals(gp.getName());
         } else return false;
     }
+
+    public abstract ArrayList<Point> getPossibleAttacks();
 }

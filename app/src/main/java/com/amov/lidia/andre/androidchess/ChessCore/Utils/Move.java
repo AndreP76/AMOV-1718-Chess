@@ -1,13 +1,13 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Utils;
 
 import com.amov.lidia.andre.androidchess.Chess;
-import com.amov.lidia.andre.androidchess.ChessCore.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Pieces.*;
-import com.amov.lidia.andre.androidchess.ChessCore.Utils.*;
+import com.amov.lidia.andre.androidchess.ChessCore.Game;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
 import com.amov.lidia.andre.androidchess.R;
 
-public class Move {
+import java.io.Serializable;
+
+public class Move implements Serializable {
     Point Origin;
     Point Destination;
     String PieceName;

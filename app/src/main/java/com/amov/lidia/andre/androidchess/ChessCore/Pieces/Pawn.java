@@ -15,6 +15,7 @@ import com.amov.lidia.andre.androidchess.R;
 import java.util.ArrayList;
 
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
 public class Pawn extends GamePiece {
     boolean firstMove = true;
@@ -96,7 +97,26 @@ public class Pawn extends GamePiece {
     }
 
     public ArrayList<Point> getPossibleAttacks() {
-        return null;
+        ArrayList<Point> ALP = new ArrayList<>();
+        Point p = this.getPositionInBoard();
+
+        Point p1 = p.sum(DirectionUtils.DirectionToVector(Direction.SOUTHEAST));
+        Point p2 = p.sum(DirectionUtils.DirectionToVector(Direction.SOUTHWEST));
+        if (this.getSide() == WHITE_SIDE) {//goes south
+
+        } else {//goes north
+
+        }
+
+        if (this.getGameBoard().getTile(p1) != null && this.getGameBoard().getTile(p1).getPieceInTile() != null) {
+            ALP.add(p1);
+        }
+
+        if (this.getGameBoard().getTile(p2) != null && this.getGameBoard().getTile(p2).getPieceInTile() != null) {
+            ALP.add(p2);
+        }
+
+        return ALP;
     }
 
     public boolean getFirstMoveUsed() {

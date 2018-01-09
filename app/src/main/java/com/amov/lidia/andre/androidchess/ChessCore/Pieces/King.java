@@ -59,10 +59,6 @@ public class King extends GamePiece {
         return ALA;
     }
 
-    public ArrayList<Point> getPossibleAttacks() {
-        return null;
-    }
-
     @Override
     public String getLetter() {
         return "K";
@@ -76,5 +72,14 @@ public class King extends GamePiece {
     @Override
     public String getName() {
         return Chess.resources.getString(R.string.king); //"King";
+    }
+
+    public ArrayList<Point> getPossibleAttacks() {
+        ArrayList<Point> ALP = new ArrayList<>();
+        ArrayList<Move> ALM = getMoves();
+        for (Move m : ALM) {
+            ALP.add(m.getDestination());
+        }
+        return ALP;
     }
 }

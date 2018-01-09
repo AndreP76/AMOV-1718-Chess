@@ -1,6 +1,8 @@
 package com.amov.lidia.andre.androidchess.ChessCore.Utils;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
     private int Col;
     private int Line;
 

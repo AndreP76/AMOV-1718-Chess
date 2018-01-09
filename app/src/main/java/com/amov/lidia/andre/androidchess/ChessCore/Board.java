@@ -9,12 +9,13 @@ import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
-public class Board {
+public class Board implements Serializable {
     public static final int STANDARD_BOARD_LENGTH = 8;
     public static final int STANDARD_BOARD_WIDTH = 8;
     ArrayList<GamePiece> AllPieces;
@@ -154,6 +155,24 @@ public class Board {
         return Game.PointIsAttacked(OtherSideAttacks, positionInBoard) != null;
     }
 
+    private boolean TileCanBeAttackedBySide(Point position, short side) {
+        ArrayList<Point> ALP = new ArrayList<>();
+        for (GamePiece gp : AllPieces) {
+            if (gp.getSide() == side) {
+                ALP.addAll(gp.getPossibleAttacks());
+            }
+        }
+
+        return PointCanAttacked(ALP, position);
+    }
+
+    private boolean PointCanAttacked(ArrayList<Point> alp, Point target) {
+        for (Point p : alp) {
+            if (p.equals(target)) return true;
+        }
+        return false;
+    }
+
     public boolean canKingEscape(short Side) {
         King k = null;
         for (GamePiece gp : AllPieces) {
@@ -166,7 +185,7 @@ public class Board {
             ArrayList<Move> KingPossibleMoves = k.getMoves();
             for (Move m:
                  KingPossibleMoves) {
-                if (!TileIsAttackedBySide(m.getDestination(), k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE))
+                if (!TileCanBeAttackedBySide(m.getDestination(), k.getSide() == BLACK_SIDE ? WHITE_SIDE : BLACK_SIDE))
                     return true;
             }
             return false;// GG, king is ded, long live the king

@@ -67,24 +67,13 @@ public class Bishop extends GamePiece {
         return ALA;
     }
 
-    @Deprecated
-    /*This is probably not the method you are looking for*/
+
     public ArrayList<Point> getPossibleAttacks() {
         ArrayList<Point> ALP = new ArrayList<>();
-        Point pointInBoard = this.getPositionInBoard();
-
-        int LineIncrement = -1;
-        int ColIncrement = -1;
-
-        for (int i = 1; i < 9; i += 2) {
-            Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
-            Point P = pointInBoard;
-            P.sum(V);
-            while (this.getGameBoard().getTile(P) != null) {
-                ALP.add(P);
-            }
+        ArrayList<Move> ALM = getMoves();
+        for (Move m : ALM) {
+            ALP.add(m.getDestination());
         }
-
         return ALP;
     }
 

@@ -56,7 +56,12 @@ public class Queen extends GamePiece {
     }
 
     public ArrayList<Point> getPossibleAttacks() {
-        return null;
+        ArrayList<Point> ALP = new ArrayList<>();
+        ArrayList<Move> ALM = getMoves();
+        for (Move m : ALM) {
+            ALP.add(m.getDestination());
+        }
+        return ALP;
     }
 
     @Override

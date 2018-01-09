@@ -1,5 +1,6 @@
 package com.amov.lidia.andre.androidchess.CustomViews;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -223,6 +224,10 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() != MotionEvent.ACTION_DOWN)
             return super.onTouchEvent(event);//not interested, thanks
+
+        if (whiteSideWon || blackSideWon)
+            ((Activity) getContext()).finish();//horrible hack
+
         int X = (int) event.getX();
         int Y = (int) event.getY();
 

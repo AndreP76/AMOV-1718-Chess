@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.amov.lidia.andre.androidchess.ChessCore.Player;
 import com.amov.lidia.andre.androidchess.CustomDialogs.SelectProfileDialog;
-import com.amov.lidia.andre.androidchess.CustomFragments.PlayerInfoFragment;
 import com.amov.lidia.andre.androidchess.CustomViews.CameraPreviewer;
 import com.amov.lidia.andre.androidchess.PlayerProfile;
 import com.amov.lidia.andre.androidchess.ProfileManager;
@@ -173,12 +172,12 @@ public class RegisterPlayer extends Activity {
             } else {
                 startCamera();
                 playerName.setText("");
-                playerID.setText(R.string.player + currentPayerCount + 1);
+                playerID.setText(getString(R.string.player) + currentPayerCount + 1);
             }
         } else {
             Intent s = new Intent();
             s.putExtra("newPlayer", new Player(P, -1, false));
-            setResult(PlayerInfoFragment.NEW_PLAYER_REGISTER, s);
+            setResult(Activity.RESULT_OK, s);
             finish();
         }
     }
@@ -252,7 +251,7 @@ public class RegisterPlayer extends Activity {
                     } else {
                         startCamera();
                         playerName.setText("");
-                        playerID.setText(R.string.player + currentPayerCount + 1);
+                        playerID.setText(getString(R.string.player) + currentPayerCount + 1);
                     }
                 }
             }
