@@ -45,7 +45,7 @@
         <activity
             android:name=".CustomActivities.RegisterPlayer"
             android:screenOrientation="portrait" />
-        <activity android:name=".CustomActivities.CreditsActivity"></activity>
+        <activity android:name=".CustomActivities.CreditsActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
