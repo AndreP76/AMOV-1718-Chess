@@ -20,13 +20,13 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <SurfaceView
+    <FrameLayout
         android:id="@+id/pictureArea"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="18">
 
-    </SurfaceView>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

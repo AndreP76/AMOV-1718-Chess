@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.amov.lidia.andre.androidchess.Chess;
 import com.amov.lidia.andre.androidchess.CustomDialogs.SinglePlayerStartDialog;
@@ -43,7 +44,7 @@ public class MainActivity extends Activity {
     }
 
     public void onlineStart(View view) {
-
+        Toast.makeText(this, "Nope!", Toast.LENGTH_SHORT).show();
     }
 
     public void eraseProfiles(View view) {

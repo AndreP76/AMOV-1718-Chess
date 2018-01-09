@@ -326,11 +326,11 @@ public class Game extends Observable implements Serializable {
     public void executeAIMove(int side) {
         Player p = getCurrentPlayer();
 
-        try {
+        /*try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         ArrayList<GamePiece> pieces = p.getPieces();
         ArrayList<Attack> attacks = new ArrayList<>();
@@ -347,5 +347,17 @@ public class Game extends Observable implements Serializable {
         } else {
             executeMove(moves.get(SR.nextInt(moves.size())));
         }
+    }
+
+    public void removeOnMoveListener(OnPieceMoveListenerInterface playerInfoFragment) {
+        if (this.onPieceMoveListener.contains(playerInfoFragment)) {
+            this.onPieceMoveListener.remove(playerInfoFragment);
+        }
+    }
+
+    public void setPlayer(int side, Player p) {
+        if (side == WHITE_SIDE) {
+            WhitePlayer = p;
+        } else BlackPlayer = p;
     }
 }

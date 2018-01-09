@@ -78,8 +78,16 @@ public class Player implements Serializable {
         return side;
     }
 
+    public void setSide(int side) {
+        this.side = side;
+    }
+
     public boolean isAI() {
         return isAI;
+    }
+
+    public void setAI(boolean AI) {
+        this.isAI = AI;
     }
 
     public ArrayList<GamePiece> getPieces() {

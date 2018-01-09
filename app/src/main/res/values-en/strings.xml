@@ -41,7 +41,10 @@
     <string name="errorOpeningCamera">Error opening camera!</string>
     <string name="white_victory">White side victory!</string>
     <string name="black_victory">Black side victory!</string>
-    <string name="king_char">\\u265A</string>
-    <string name="queen_char">\\u265B</string>
+    <string name="king_char">\u265A</string>
+    <string name="queen_char">\u265B</string>
     <string name="creditos">Creditos</string>
+    <string name="resign">Resign match</string>
+    <string name="playerEnter">Novo Jogador</string>
+    <string name="newPlayerString">Novo Jogador</string>
 </resources>

@@ -14,16 +14,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.amov.lidia.andre.androidchess.CameraHandler;
 import com.amov.lidia.andre.androidchess.ChessCore.Player;
 import com.amov.lidia.andre.androidchess.CustomDialogs.SelectProfileDialog;
+import com.amov.lidia.andre.androidchess.CustomFragments.PlayerInfoFragment;
+import com.amov.lidia.andre.androidchess.CustomViews.CameraPreviewer;
 import com.amov.lidia.andre.androidchess.PlayerProfile;
 import com.amov.lidia.andre.androidchess.ProfileManager;
 import com.amov.lidia.andre.androidchess.R;
@@ -37,7 +37,7 @@ import java.util.Random;
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
-public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
+public class RegisterPlayer extends Activity {
     public static final String PLAYER_COUNT_ID = "playerCount";
     public static final String NEXT_ACTIVITY_ARGS_ID = "nextActivityArgs";
     public static final String NEXT_ACTIVITY_CLASS_ID = "nextClass";
@@ -49,38 +49,45 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     Bundle nextActivityArgs;
     Class nextActivityClass;
     Button takePictureButton;
-    SurfaceView cameraPreview;
-    SurfaceHolder cameraPreviewHolder;
+    CameraPreviewer cameraPreview;
+    FrameLayout previewContainer;
     EditText playerName;
     TextView playerID;
 
     private boolean pictureTaken;
-
-    private CameraHandler camHandler;
+    private boolean singleMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_player);
 
-        howManyPlayers = getIntent().getIntExtra(PLAYER_COUNT_ID, 1);
-        currentPayerCount = 0;
-        nextActivityArgs = getIntent().getBundleExtra(NEXT_ACTIVITY_ARGS_ID);
-        try {
-            nextActivityClass = Class.forName(getIntent().getStringExtra(NEXT_ACTIVITY_CLASS_ID));
-        } catch (ClassNotFoundException e) {
-            Log.w("[REGISTER PLAYER] :: ", "Missing next Activity parameter, or unknown activity");
-            finish();
-        }
-
-        cameraPreview = findViewById(R.id.pictureArea);
-        cameraPreviewHolder = cameraPreview.getHolder();
-        cameraPreviewHolder.addCallback(this);
+        singleMode = (getCallingActivity() != null);
         takePictureButton = findViewById(R.id.takePictureButton);
+        previewContainer = findViewById(R.id.pictureArea);
         playerName = findViewById(R.id.nameBox);
         playerID = findViewById(R.id.playerId);
 
-        playerID.setText(getString(R.string.player) + (currentPayerCount + 1));
+        cameraPreview = new CameraPreviewer(this);
+        previewContainer.addView(cameraPreview);
+
+        if (!singleMode) {
+            howManyPlayers = getIntent().getIntExtra(PLAYER_COUNT_ID, 1);
+            currentPayerCount = 0;
+            nextActivityArgs = getIntent().getBundleExtra(NEXT_ACTIVITY_ARGS_ID);
+            try {
+                nextActivityClass = Class.forName(getIntent().getStringExtra(NEXT_ACTIVITY_CLASS_ID));
+            } catch (ClassNotFoundException e) {
+                Log.w("[REGISTER PLAYER] :: ", "Missing next Activity parameter, or unknown activity");
+                finish();
+            }
+            playerID.setText(getString(R.string.player) + (currentPayerCount + 1));
+        } else {
+            howManyPlayers = 1;
+            currentPayerCount = 0;
+            playerID.setText(getString(R.string.newPlayerString));
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 String[] s = {android.Manifest.permission.CAMERA};
@@ -107,6 +114,17 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     }
 
     private void startCamera() {
+        cameraPreview.post(new Runnable() {
+            @Override
+            public void run() {
+                cameraPreview.startPreviewing();
+            }
+        });
+        //cameraPreview.startPreviewing();
+    }
+
+    /*
+    private void startCamera() {
         int frontCameraIndex = CameraHandler.findFrontCamera();
 
         if (camHandler == null)
@@ -118,11 +136,12 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
         capturedPicture = getDrawable(R.mipmap.bot_image);
 
         camHandler.openCameraForPreview(cameraPreviewHolder);
-    }
+    }*/
 
     private void stopCamera() {
-        if (camHandler != null)
-            camHandler.releaseAndCloseCamera();
+        cameraPreview.stopPreviewing();
+        /*if (camHandler != null)
+            camHandler.releaseAndCloseCamera();*/
     }
 
     public void acceptPlayerClick(View view) {
@@ -142,17 +161,25 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
         }
 
         PlayerProfile P = ProfileManager.addNewProfile(playerName.getText().toString(), thisPictureName, this);
-        nextActivityArgs.putSerializable("Player" + currentPayerCount, new Player(P, currentPayerCount % 2 == 0 ? BLACK_SIDE : WHITE_SIDE, false));
 
-        if (currentPayerCount >= howManyPlayers) {
-            Intent it = new Intent(this, nextActivityClass);
-            it.putExtra("args", nextActivityArgs);
-            startActivity(it);
-            finish();
+        if (!singleMode) {
+            nextActivityArgs.putSerializable("Player" + currentPayerCount, new Player(P, currentPayerCount % 2 == 0 ? BLACK_SIDE : WHITE_SIDE, false));
+
+            if (currentPayerCount >= howManyPlayers) {
+                Intent it = new Intent(this, nextActivityClass);
+                it.putExtra("args", nextActivityArgs);
+                startActivity(it);
+                finish();
+            } else {
+                startCamera();
+                playerName.setText("");
+                playerID.setText(R.string.player + currentPayerCount + 1);
+            }
         } else {
-            startCamera();
-            playerName.setText("");
-            playerID.setText(R.string.player + currentPayerCount + 1);
+            Intent s = new Intent();
+            s.putExtra("newPlayer", new Player(P, -1, false));
+            setResult(PlayerInfoFragment.NEW_PLAYER_REGISTER, s);
+            finish();
         }
     }
 
@@ -168,16 +195,14 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
     }
 
     public void cameraButtonClicked(View view) {
-        if (camHandler != null) {
             if (!pictureTaken) {
-                camHandler.takePicture(new Camera.PictureCallback() {
+                cameraPreview.takePicture(new Camera.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] data, Camera camera) {
                         takePictureButton.setText(R.string.resetPictureText);
                         capturedPictureData = data;
                         stopCamera();
                         capturedPicture = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
-                        cameraPreview.setBackground(capturedPicture);
                         pictureTaken = true;
                     }
                 });
@@ -187,31 +212,6 @@ public class RegisterPlayer extends Activity implements SurfaceHolder.Callback {
                 takePictureButton.setText(R.string.takePictureText);
                 startCamera();
             }
-        }
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                String[] s = {android.Manifest.permission.CAMERA};
-                requestPermissions(s, CAMERA_PERMISSION_REQUEST);
-            } else {//has permission
-                startCamera();
-            }
-        } else {//permission not needed
-            startCamera();
-        }
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        stopCamera();
     }
 
     @Override

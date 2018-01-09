@@ -25,7 +25,7 @@ public class Rook extends GamePiece {
     public ArrayList<Move> getMoves() {
         ArrayList<Move> ALM = new ArrayList<>();
         Point thisPosition = this.getPositionInBoard();
-        for (int i = 0; i <= 7; ++i) {
+        for (int i = 0; i <= 7; i = i + 2) {
             Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
             Point p = thisPosition.sum(V);
 
@@ -48,7 +48,7 @@ public class Rook extends GamePiece {
         int LineIncrement = 0;
         int ColIncrement = 0;
         Point thisPosition = this.getPositionInBoard();
-        for (int i = 0; i <= 7; ++i) {
+        for (int i = 0; i <= 7; i = i + 2) {
             Point V = DirectionUtils.DirectionToVector(DirectionUtils.IndexToDir(i));
             Point p = thisPosition.sum(V);
 

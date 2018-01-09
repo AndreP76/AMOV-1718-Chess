@@ -35,38 +35,38 @@ public class CameraHandler {
     }
 
     public boolean openCameraForPreview(SurfaceHolder sh) {
+        releaseAndCloseCamera();
+        currentSurfaceHolder = sh;
         if (currentCameraState != CameraState.Open) {
             currentCameraState = CameraState.Open;
-            currentSurfaceHolder = sh;
 
             try {
                 camera = Camera.open(CameraID);
-                camera.setPreviewDisplay(sh);
-                camera.lock();
+                //camera.lock();
                 Camera.Parameters cp = camera.getParameters();
                 cp.setRotation(90);
                 camera.setDisplayOrientation(90);
                 camera.setParameters(cp);
+                camera.setPreviewDisplay(currentSurfaceHolder);
                 camera.startPreview();
-                return true;
             } catch (IOException e) {
                 Log.e("[CAMERA] :: ", "Error opening camera! (Maybe another application has the camera locked ?)");
                 e.printStackTrace();
-                return false;
             }
         }
         return true;
     }
 
     public void releaseAndCloseCamera() {
+        Log.d("[CAMERA] :: ", "Camera release called!");
         if (camera != null) {
             camera.stopPreview();
-            try {
+            /*try {
                 camera.setPreviewDisplay(null);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            camera.unlock();
+            }*/
+            //camera.unlock();
             camera.release();
             camera = null;
             currentCameraState = CameraState.Closed;
