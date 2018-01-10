@@ -38,10 +38,10 @@
     <string name="loadMenuIcon">Carregar Perfil</string>
     <string name="errorOpeningCamera">Erro a abrir a câmara!</string>
     <string name="cancelProfileLoad">Cancelar</string>
-    <string name="queen_char">\u265B</string>
+    <string name="queen_char">\u265A</string>
     <string name="king_char">\u265A</string>
-    <string name="creditos">Creditos</string>
-    <string name="resign">Resign match</string>
+    <string name="creditos">Credits</string>
+    <string name="resign">Desistir</string>
     <string name="playerEnter">Novo Jogador</string>
     <string name="newPlayerString">Novo Jogador</string>
     <string name="amov">Arquiteturas Móveis</string>

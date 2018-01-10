@@ -51,7 +51,7 @@ public class King extends GamePiece {
             Direction d = DirectionUtils.IndexToDir(i);
             Point v = DirectionUtils.DirectionToVector(d);
             ChessTile T = this.getGameBoard().getTile(new Point(p.getLine() + v.getLine(),p.getCol() + v.getCol()));
-            if (T != null && T.getPieceInTile() != null && T.getPieceInTile().getSide() != this.getSide() && !this.getGameBoard().TileIsAttacked(T, this.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE)) {
+            if (T != null && T.getPieceInTile() != null && T.getPieceInTile().getSide() != this.getSide() && !this.getGameBoard().TileCanBeAttackedBySide(T.getCoordinatesInBoard(), this.getSide() == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE)) {
                 ALA.add(new Attack(this,T.getPieceInTile()));
             }
         }

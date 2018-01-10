@@ -136,7 +136,7 @@ public class Board implements Serializable {
         }else throw new NoKingException(Side == WHITE_SIDE ? "White " : "Black" + " side has no king! How can this happen ?");
     }
 
-    private GamePiece getPieceOfSide(Class pieceClass, short side) {
+    public GamePiece getPieceOfSide(Class pieceClass, short side) {
         for (GamePiece gp : AllPieces) {
             if (pieceClass.isInstance(gp) && gp.getSide() == side) {
                 return gp;
@@ -155,7 +155,7 @@ public class Board implements Serializable {
         return Game.PointIsAttacked(OtherSideAttacks, positionInBoard) != null;
     }
 
-    private boolean TileCanBeAttackedBySide(Point position, short side) {
+    public boolean TileCanBeAttackedBySide(Point position, short side) {
         ArrayList<Point> ALP = new ArrayList<>();
         for (GamePiece gp : AllPieces) {
             if (gp.getSide() == side) {

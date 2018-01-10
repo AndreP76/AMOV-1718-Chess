@@ -21,6 +21,8 @@ public class Pawn extends GamePiece {
     boolean firstMove = true;
     boolean firstMoveUsed = false;
 
+    boolean promotionFlag = false;
+
     public Pawn(Board B, Point Position, short Side) throws AlreadyFilledException {
         super(B, Position, Side);
     }
@@ -62,6 +64,9 @@ public class Pawn extends GamePiece {
                     firstMoveUsed = true;
                 }
             }
+            if (this.getPositionInBoard().getLine() == this.getGameBoard().getBoardLines() - 1 || this.getPositionInBoard().getLine() == 0)
+                promotionFlag = true;
+            // TODO: 1/10/18 : check for promotions in the board view, and create the apropriate dialog
         }
         return r;
     }

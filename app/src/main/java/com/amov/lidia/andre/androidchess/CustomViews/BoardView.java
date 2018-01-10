@@ -14,6 +14,7 @@ import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Game;
 import com.amov.lidia.andre.androidchess.ChessCore.OnPieceMoveListenerInterface;
 import com.amov.lidia.andre.androidchess.ChessCore.Pieces.GamePiece;
+import com.amov.lidia.andre.androidchess.ChessCore.Pieces.King;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
@@ -21,6 +22,7 @@ import com.amov.lidia.andre.androidchess.R;
 
 import java.util.ArrayList;
 
+import static com.amov.lidia.andre.androidchess.ChessCore.Game.BLACK_SIDE;
 import static com.amov.lidia.andre.androidchess.ChessCore.Game.WHITE_SIDE;
 
 /**
@@ -60,6 +62,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
     private boolean blackSideWon;
 
     private Context ctx;
+    private boolean whiteInDanger;
+    private boolean blackInDanger;
 
     public BoardView(Context context) {
         super(context);
@@ -145,27 +149,54 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
             Attacks = gp.getAttacks();
         }
 
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 8; ++i) {//the standard render loop, renders the tiles
             for (int j = 0; j < 8; ++j) {
-                Paint p = null;
-                if (gp != null) {
+                int startX = j * widthPerCol + borderThicknessSides + boardStartX;
+                int startY = i * heightPerLine + borderThicknessTops + boardStartY;
+                canvas.drawRect(startX, startY, startX + widthPerCol, startY + heightPerLine, DefaultResolvePaint(i, j));
+            }
+        }
+
+
+        if (gp != null) {
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 8; ++j) {
+                    Paint p = null;
                     if (i == gp.getPositionInBoard().getLine() && j == gp.getPositionInBoard().getCol())
                         p = greenPaint;
                     else if (Game.PointIsAttacked(Attacks, new Point(i, j)) != null) {
                         p = redPaint;
                     } else if (Game.PointCanBeMovedTo(Movements, new Point(i, j)) != null) {
                         p = bluePaint;
-                    } else {
-                        p = DefaultResolvePaint(i, j);
-                    }
-                } else {
-                    p = DefaultResolvePaint(i, j);
-                }
+                    } else continue;
 
-                int startX = j * widthPerCol + borderThicknessSides + boardStartX;
-                int startY = i * heightPerLine + borderThicknessTops + boardStartY;
-                canvas.drawRect(startX, startY, startX + widthPerCol, startY + heightPerLine, p);
+                    int startX = (int) (j * widthPerCol + borderThicknessSides + boardStartX + widthPerCol * 0.1);
+                    int startY = (int) (i * heightPerLine + borderThicknessTops + boardStartY + heightPerLine * 0.1);
+                    canvas.drawRect(startX, startY, startX + widthPerCol * 0.8f, startY + heightPerLine * 0.8f, p);
+                }
             }
+        }
+
+        if (whiteInDanger) {
+            Point whiteKingPos = currentGame.getBoard().getPieceOfSide(King.class, WHITE_SIDE).getPositionInBoard();
+            int borderStartX = boardStartX + whiteKingPos.getCol() * widthPerCol + borderThicknessSides;
+            int borderStartY = boardStartY + (whiteKingPos.getLine()) * heightPerLine + borderThicknessTops;
+            int tileStartX = (int) (borderStartX + widthPerCol * 0.1);
+            int tileStartY = (int) (borderStartY + heightPerLine * 0.1);
+
+            canvas.drawRoundRect(borderStartX, borderStartY, borderStartX + widthPerCol, borderStartY + heightPerLine, widthPerCol, heightPerLine, redPaint);
+            canvas.drawRoundRect(tileStartX, tileStartY, tileStartX + widthPerCol * 0.8f, tileStartY + heightPerLine * 0.8f, widthPerCol * 0.8f, heightPerLine * 0.8f, DefaultResolvePaint(whiteKingPos.getLine(), whiteKingPos.getCol()));
+        }
+
+        if (blackInDanger) {
+            Point KingPos = currentGame.getBoard().getPieceOfSide(King.class, BLACK_SIDE).getPositionInBoard();
+            int borderStartX = boardStartX + KingPos.getCol() * widthPerCol + borderThicknessSides;
+            int borderStartY = boardStartY + (KingPos.getLine()) * heightPerLine + borderThicknessTops;
+            int tileStartX = (int) (borderStartX + widthPerCol * 0.1);
+            int tileStartY = (int) (borderStartY + heightPerLine * 0.1);
+
+            canvas.drawRoundRect(borderStartX, borderStartY, borderStartX + widthPerCol, borderStartY + heightPerLine, widthPerCol * 0.8f, heightPerLine * 0.8f, redPaint);
+            canvas.drawRoundRect(tileStartX, tileStartY, tileStartX + widthPerCol * 0.8f, tileStartY + heightPerLine * 0.8f, widthPerCol * 0.8f, heightPerLine * 0.8f, DefaultResolvePaint(KingPos.getLine(), KingPos.getCol()));
         }
 
         Game G = Chess.getCurrentGame();
@@ -309,6 +340,9 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
                 blackSideWon = true;
             }
         } else {//game not ended
+            whiteInDanger = currentGame.getBoard().isKingInDanger(WHITE_SIDE);
+            blackInDanger = currentGame.getBoard().isKingInDanger(BLACK_SIDE);
+
             if (currentGame.getCurrentPlayer().isAI()) {
                 currentGame.executeAIMove(currentGame.getCurrentPlayer().getSide());
             }

@@ -97,4 +97,8 @@ public class Player implements Serializable {
     public void setPieces(ArrayList<GamePiece> pieces) {
         Pieces = pieces;
     }
+
+    public void addPiece(GamePiece gp) {
+        this.Pieces.add(gp);
+    }
 }

@@ -33,7 +33,6 @@ public class Game extends Observable implements Serializable {
     public GameMode gameMode;
 
     ArrayList<GamePiece>[] SidesPieces;
-    ArrayList<GamePiece>[] CapturedPieces;
     Board GameBoard;
     Short StartSide = WHITE_SIDE;
     private short CurrentPlayer;
@@ -58,10 +57,6 @@ public class Game extends Observable implements Serializable {
         SidesPieces = new ArrayList[2];
         SidesPieces[0] = new ArrayList<GamePiece>();
         SidesPieces[1] = new ArrayList<GamePiece>();
-
-        CapturedPieces = new ArrayList[2];
-        CapturedPieces[0] = new ArrayList<GamePiece>();
-        CapturedPieces[1] = new ArrayList<GamePiece>();
         try {
             for (int i = 0; i < STANDARD_PAWNS_COUNT; ++i) {
                 Pawn WhitePawn = new Pawn(GameBoard, new Point(1, i), WHITE_SIDE);
@@ -238,20 +233,22 @@ public class Game extends Observable implements Serializable {
     public boolean executeMove(Move m) {
         if (m instanceof Attack) return executeMove((Attack) m);
         if (m.isValidMove()) {
-            moveCommons();
-            m.getPiece().Move(m.getDestination());
-            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
-                    translateGameMode(gameMode), getMoveDescription(m));
-            if (onPieceMoveListener != null) {
-                notifyMoveObservers();
+            if (!kingWillBeInDanger(getCurrentPlayerSide(), m)) {
+                moveCommons();
+                m.getPiece().Move(m.getDestination());
+                itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                        translateGameMode(gameMode), getMoveDescription(m));
+                if (onPieceMoveListener != null) {
+                    notifyMoveObservers();
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }
 
     private void moveCommons() {
-        for (GamePiece gp : SidesPieces[CurrentPlayer]) {
+        for (GamePiece gp : SidesPieces[CurrentPlayer == WHITE_SIDE ? BLACK_SIDE : WHITE_SIDE]) {
             if (gp instanceof Pawn) {
                 Pawn p = (Pawn) gp;
                 p.setFirstMoveUsed(false);
@@ -264,12 +261,42 @@ public class Game extends Observable implements Serializable {
 
     public boolean executeMove(Attack a) {
         if (a.isValidMove()) {
-            moveCommons();
-            a.getPiece().Move(a.getDestination());
-            destroyPiece(a.getAttackedPiece());
-            itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
-                    translateGameMode(gameMode), getMoveDescription(a));
-            notifyMoveObservers();
+            if (!kingWillBeInDanger(getCurrentPlayerSide(), a)) {//checks if the king will be endangered after the move
+                moveCommons();
+                a.getPiece().Move(a.getDestination());
+                destroyPiece(a.getAttackedPiece());
+                itemHistorico.addJogada(WhitePlayer.getName(), BlackPlayer.getName(),
+                        translateGameMode(gameMode), getMoveDescription(a));
+                notifyMoveObservers();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean kingWillBeInDanger(short currentPlayerSide, Attack a) {
+        GamePiece enemy = a.getAttackedPiece();
+
+        destroyPiece(enemy);
+        a.getPiece().setPositionInBoard(a.getDestination());
+
+        if (getBoard().isKingInDanger(currentPlayerSide)) {
+            a.getPiece().setPositionInBoard(a.getOrigin());
+            rebuildPiece(enemy);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean kingWillBeInDanger(short currentPlayerSide, Move a) {
+        Point dest = a.getDestination();
+        Point orig = a.getOrigin();
+        GamePiece target = a.getPiece();
+
+        target.setPositionInBoard(dest);//mock the move
+
+        if (getBoard().isKingInDanger(currentPlayerSide)) {//if the king will be in danger, undo the mock move
+            target.setPositionInBoard(orig);
             return true;
         }
         return false;
@@ -285,6 +312,16 @@ public class Game extends Observable implements Serializable {
         }
 
         GameBoard.AllPieces.remove(attackedPiece);
+    }
+
+    private void rebuildPiece(GamePiece gp) {
+        SidesPieces[gp.getSide()].add(gp);
+        GameBoard.AllPieces.add(gp);
+        if (gp.getSide() == WHITE_SIDE)
+            WhitePlayer.addPiece(gp);
+        else BlackPlayer.addPiece(gp);
+
+        gp.setPositionInBoard(gp.getPositionInBoard());
     }
 
     public GamePiece getCurrentSelectedPiece() {
@@ -340,11 +377,18 @@ public class Game extends Observable implements Serializable {
         }
 
         Random SR = new Random(System.currentTimeMillis());
-        boolean shouldAttack = SR.nextInt(100) > 50;
-        if (shouldAttack && attacks.size() > 0) {
-            executeMove(attacks.get(SR.nextInt(attacks.size())));
-        } else {
-            executeMove(moves.get(SR.nextInt(moves.size())));
+        boolean moveSuccess = false;
+        while (!moveSuccess) {
+            boolean shouldAttack = moves.isEmpty() || SR.nextInt(100) > 50;
+            if (shouldAttack && attacks.size() > 0) {
+                int index = SR.nextInt(attacks.size());
+                moveSuccess = executeMove(attacks.get(index));
+                attacks.remove(index);
+            } else {
+                int index = SR.nextInt(moves.size());
+                moveSuccess = executeMove(moves.get(index));
+                moves.remove(index);
+            }
         }
     }
 

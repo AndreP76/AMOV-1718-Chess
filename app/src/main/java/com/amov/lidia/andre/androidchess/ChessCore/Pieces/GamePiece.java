@@ -3,6 +3,7 @@ package com.amov.lidia.andre.androidchess.ChessCore.Pieces;
 import com.amov.lidia.andre.androidchess.ChessCore.Board;
 import com.amov.lidia.andre.androidchess.ChessCore.Exceptions.AlreadyFilledException;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Attack;
+import com.amov.lidia.andre.androidchess.ChessCore.Utils.ChessTile;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Move;
 import com.amov.lidia.andre.androidchess.ChessCore.Utils.Point;
 
@@ -51,7 +52,8 @@ public abstract class GamePiece implements Serializable {
 
     /*SETTERS*/
     public boolean setPositionInBoard(Point positionInBoard) {
-        GameBoard.getTile(PositionInBoard).setPieceInTile(null);
+        ChessTile ct = GameBoard.getTile(PositionInBoard);
+        if (ct != null) ct.setPieceInTile(null);
         PositionInBoard = positionInBoard;
         GameBoard.getTile(positionInBoard).setPieceInTile(this);
         return true;
