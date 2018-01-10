@@ -70,7 +70,7 @@ public class Chess extends Application {
 
     public static void gravarHistoricos() {
         try {
-            FileOutputStream fos = chess.openFileOutput(FILE_NAME, MODE_APPEND);
+            FileOutputStream fos = chess.openFileOutput(FILE_NAME, MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(historicos);
             fos.close();

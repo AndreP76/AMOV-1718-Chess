@@ -40,7 +40,7 @@
     <string name="cancelProfileLoad">Cancelar</string>
     <string name="queen_char">\u265A</string>
     <string name="king_char">\u265A</string>
-    <string name="creditos">Credits</string>
+    <string name="creditos">Créditos</string>
     <string name="resign">Desistir</string>
     <string name="playerEnter">Novo Jogador</string>
     <string name="newPlayerString">Novo Jogador</string>
@@ -49,4 +49,6 @@
     <string name="lidia_fonseca">Lídia Fonseca, 21250370</string>
     <string name="docente">Docente: Álvaro Santos</string>
     <string name="trabalho_realizado_por">Trabalho realizado por:</string>
+    <string name="white_victory">Vitória do lado branco!</string>
+    <string name="black_victory">Vitória do lado preto!</string>
 </resources>
