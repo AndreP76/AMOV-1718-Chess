@@ -38,7 +38,7 @@
     <string name="loadMenuIcon">Carregar Perfil</string>
     <string name="errorOpeningCamera">Erro a abrir a câmara!</string>
     <string name="cancelProfileLoad">Cancelar</string>
-    <string name="queen_char">\u265A</string>
+    <string name="queen_char">\u265B</string>
     <string name="king_char">\u265A</string>
     <string name="creditos">Créditos</string>
     <string name="resign">Desistir</string>

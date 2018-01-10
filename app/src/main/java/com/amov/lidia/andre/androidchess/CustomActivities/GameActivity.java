@@ -49,8 +49,8 @@ public class GameActivity extends Activity {
 
         Fragment gf = GameFragment.newInstance(b);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment pf1 = PlayerInfoFragment.newInstance(Chess.getCurrentGame().getBlackPlayer());
-        Fragment pf2 = PlayerInfoFragment.newInstance(Chess.getCurrentGame().getWhitePlayer());
+        Fragment pf1 = PlayerInfoFragment.newInstance(Chess.getCurrentGame().getWhitePlayer());
+        Fragment pf2 = PlayerInfoFragment.newInstance(Chess.getCurrentGame().getBlackPlayer());
         ft.add(R.id.player1Container, pf1);
         ft.add(R.id.player2Container, pf2);
         ft.add(R.id.gameFragmentContainer, gf);

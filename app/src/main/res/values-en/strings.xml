@@ -43,7 +43,7 @@
     <string name="cancelProfileLoad">Cancel</string>
     <string name="errorOpeningCamera">Error opening camera!</string>
     <string name="king_char">\u265A</string>
-    <string name="queen_char">\u265A</string>
+    <string name="queen_char">\u265B</string>
     <string name="creditos">Credits</string>
     <string name="resign">Resign match</string>
     <string name="playerEnter">New Player</string>
