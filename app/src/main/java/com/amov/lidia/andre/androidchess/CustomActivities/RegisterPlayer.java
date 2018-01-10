@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -23,13 +24,12 @@ import android.widget.TextView;
 import com.amov.lidia.andre.androidchess.ChessCore.Player;
 import com.amov.lidia.andre.androidchess.CustomDialogs.SelectProfileDialog;
 import com.amov.lidia.andre.androidchess.CustomViews.CameraPreviewer;
+import com.amov.lidia.andre.androidchess.PictureManager;
 import com.amov.lidia.andre.androidchess.PlayerProfile;
 import com.amov.lidia.andre.androidchess.ProfileManager;
 import com.amov.lidia.andre.androidchess.R;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -42,6 +42,7 @@ public class RegisterPlayer extends Activity {
     public static final String NEXT_ACTIVITY_CLASS_ID = "nextClass";
     private static final int CAMERA_PERMISSION_REQUEST = 12345;
     Drawable capturedPicture = null;
+    Bitmap capturedPictureRaw = null;
     byte[] capturedPictureData;
     int howManyPlayers;
     int currentPayerCount;
@@ -119,23 +120,9 @@ public class RegisterPlayer extends Activity {
                 cameraPreview.startPreviewing();
             }
         });
+
         //cameraPreview.startPreviewing();
     }
-
-    /*
-    private void startCamera() {
-        int frontCameraIndex = CameraHandler.findFrontCamera();
-
-        if (camHandler == null)
-            camHandler = new CameraHandler(frontCameraIndex);
-        else
-            camHandler.setCamera(frontCameraIndex);
-
-        //Toast.makeText(this, getString(R.string.errorOpeningCamera), Toast.LENGTH_SHORT).show();
-        capturedPicture = getDrawable(R.mipmap.bot_image);
-
-        camHandler.openCameraForPreview(cameraPreviewHolder);
-    }*/
 
     private void stopCamera() {
         cameraPreview.stopPreviewing();
@@ -151,13 +138,7 @@ public class RegisterPlayer extends Activity {
         //Bitmap rotatedBitmap = PictureManager.RotateImageData(originalBitmap,orientationDegrees);
         //capturedPictureData = PictureManager.BitmapToData(rotatedBitmap);
 
-        try (FileOutputStream FW = openFileOutput(thisPictureName, MODE_PRIVATE)) {
-            FW.write(capturedPictureData);
-        } catch (IOException e) {
-            Log.e("[REGISTER PLAYER] :: ", "Error opening file for writing!");
-            finish();
-            e.printStackTrace();
-        }
+        PictureManager.WriteImageToFile(this, thisPictureName, capturedPictureRaw, 0);
 
         PlayerProfile P = ProfileManager.addNewProfile(playerName.getText().toString(), thisPictureName, this);
 
@@ -170,6 +151,11 @@ public class RegisterPlayer extends Activity {
                 startActivity(it);
                 finish();
             } else {
+                capturedPictureData = null;
+                capturedPicture = null;
+                capturedPictureRaw = null;
+                pictureTaken = false;
+                takePictureButton.setText(R.string.takePictureText);
                 startCamera();
                 playerName.setText("");
                 playerID.setText(getString(R.string.player) + currentPayerCount + 1);
@@ -201,13 +187,17 @@ public class RegisterPlayer extends Activity {
                         takePictureButton.setText(R.string.resetPictureText);
                         capturedPictureData = data;
                         stopCamera();
-                        capturedPicture = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+                        capturedPictureRaw = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        capturedPictureRaw = PictureManager.RotateImageData(capturedPictureRaw, 180);
+                        capturedPicture = new BitmapDrawable(getResources(), capturedPictureRaw);
                         pictureTaken = true;
                     }
                 });
             } else {
                 capturedPictureData = null;
                 capturedPicture = null;
+                capturedPictureRaw = null;
+                pictureTaken = false;
                 takePictureButton.setText(R.string.takePictureText);
                 startCamera();
             }

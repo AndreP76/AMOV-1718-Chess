@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  * Created by andre on 1/5/18.
@@ -20,6 +19,21 @@ public class PictureManager {
         try {
             FileOutputStream FOS = ctx.openFileOutput(path, Context.MODE_PRIVATE);
             FOS.write(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void WriteImageToFile(Context ctx, String path, Bitmap bmp, int rotation) {
+        try {
+            FileOutputStream FOS = ctx.openFileOutput(path, Context.MODE_PRIVATE);
+            if (rotation > 0)
+                bmp = RotateImageData(bmp, rotation);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, FOS);
+            FOS.flush();
+            FOS.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -44,15 +58,5 @@ public class PictureManager {
 
     public static Bitmap ScaleBitmap(Bitmap original, int WidthPixels, int HeightPixels) {
         return Bitmap.createScaledBitmap(original, WidthPixels, HeightPixels, false);
-    }
-
-    public static byte[] BitmapToData(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        int size = bitmap.getRowBytes() * bitmap.getHeight();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-        bitmap.copyPixelsToBuffer(byteBuffer);
-        return byteBuffer.array();
     }
 }

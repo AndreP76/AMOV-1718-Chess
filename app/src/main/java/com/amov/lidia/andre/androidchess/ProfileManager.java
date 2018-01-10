@@ -23,6 +23,7 @@ public class ProfileManager {
             ctx.deleteFile(p.getPictureFilePath());
         }
         ctx.deleteFile(PROFILES_FILE);
+        LoadedProfiles = new ArrayList<>();
     }
 
     private static ArrayList<PlayerProfile> ReadFromFile(Context ctx) {

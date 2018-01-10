@@ -302,7 +302,7 @@ public class Game extends Observable implements Serializable {
         return false;
     }
 
-    private void destroyPiece(GamePiece attackedPiece) {
+    public void destroyPiece(GamePiece attackedPiece) {
         if (attackedPiece.getSide() == BLACK_SIDE) {
             SidesPieces[BLACK_SIDE].remove(attackedPiece);
             BlackPlayer.removePiece(attackedPiece);
@@ -314,7 +314,7 @@ public class Game extends Observable implements Serializable {
         GameBoard.AllPieces.remove(attackedPiece);
     }
 
-    private void rebuildPiece(GamePiece gp) {
+    public void rebuildPiece(GamePiece gp) {
         SidesPieces[gp.getSide()].add(gp);
         GameBoard.AllPieces.add(gp);
         if (gp.getSide() == WHITE_SIDE)

@@ -339,6 +339,8 @@ public class BoardView extends View implements OnPieceMoveListenerInterface {
                 Log.v("[GAME] ::", "Black side has won!");
                 blackSideWon = true;
             }
+        } else if (currentGame.getWhitePlayer().isAI() && currentGame.getBlackPlayer().isAI()) {
+            ((Activity) getContext()).finish();
         } else {//game not ended
             whiteInDanger = currentGame.getBoard().isKingInDanger(WHITE_SIDE);
             blackInDanger = currentGame.getBoard().isKingInDanger(BLACK_SIDE);

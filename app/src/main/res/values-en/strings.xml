@@ -53,4 +53,9 @@
     <string name="docente">Teacher: Álvaro Santos</string>
     <string name="trabalho_realizado_por">Work done by:</string>
     <string name="amov">Mobile Architectures</string>
+    <string name="knightSymbol">\u265E</string>
+    <string name="queenSymbol">\u265B</string>
+    <string name="bishopSymbol">\u265D</string>
+    <string name="rookSymbol">\u265C</string>
+    <string name="promoteDialogText">Promover o peão para que peça ?</string>
 </resources>
